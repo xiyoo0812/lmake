@@ -14,6 +14,12 @@ all : pre_build target post_build
 #FLAG
 MYCFLAGS =
 
+#需要定义的FLAG
+{{% for _, flag in pairs(FLAGS or {}) do %}}
+MYCFLAGS += -{{%= flag %}}
+{{% end %}}
+
+
 {{% if STDC then %}}
 #标准库版本
 #-std=gnu99/-std=c++11/-std=c++14
