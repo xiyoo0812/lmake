@@ -1,6 +1,9 @@
 #工程名字
 PROJECT_NAME = {{%= PROJECT_NAME %}}
 
+#目标名字
+TARGET_NAME = {{%= TARGET_NAME %}}
+
 #系统环境
 UNAME_S = $(shell uname -s)
 
@@ -9,7 +12,7 @@ UNAME_S = $(shell uname -s)
 all : pre_build target post_build
 
 #FLAG
-MYCFLAGS=
+MYCFLAGS =
 
 {{% if STDC then %}}
 #标准库版本
@@ -48,13 +51,13 @@ SRC_DIR = ./src
 {{% end %}}
 
 #需要排除的源文件,目录基于$(SRC_DIR)
-EXCLUDE=
+EXCLUDE =
 {{% for _, exclude in pairs(EXCLUDES or {}) do %}}
 EXCLUDE += $(SRC_DIR)/{{%= exclude %}}
 {{% end %}}
 
 #需要连接的库文件
-LIBS=
+LIBS =
 {{% if MIMALLOC_DIR then %}}
 #是否启用mimalloc库
 LIBS += -lmimalloc -lpthread
@@ -68,10 +71,10 @@ LIBS += -l{{%= lib %}}
 {{% end %}}
 
 #定义基础的编译选项
-CC= gcc
-CX= c++
-CFLAGS= -g -O2 -Wall -Wno-deprecated -Wextra -Wno-unknown-pragmas $(MYCFLAGS)
-CXXFLAGS= -g -O2 -Wall -Wno-deprecated -Wextra -Wno-unknown-pragmas $(MYCFLAGS)
+CC = gcc
+CX = c++
+CFLAGS = -g -O2 -Wall -Wno-deprecated -Wextra -Wno-unknown-pragmas $(MYCFLAGS)
+CXXFLAGS = -g -O2 -Wall -Wno-deprecated -Wextra -Wno-unknown-pragmas $(MYCFLAGS)
 
 #项目目录
 ifndef SOLUTION_DIR
@@ -81,41 +84,43 @@ endif
 #临时文件目录
 INT_DIR = $(SOLUTION_DIR)temp/$(PROJECT_NAME)
 
+{{% if PROJECT_TYPE ~= "exe" then %}}
 #目标文件前缀，定义则.so和.a加lib前缀，否则不加
 {{% if LIB_PREFIX then %}}
-PROJECT_PREFIX=lib
+PROJECT_PREFIX = lib
 {{% else %}}
-PROJECT_PREFIX=
+PROJECT_PREFIX =
+{{% end %}}
 {{% end %}}
 
 #目标定义
 {{% if PROJECT_TYPE == "static" then %}}
 TARGET_DIR = $(SOLUTION_DIR)library
-TARGET_STATIC =  $(TARGET_DIR)/$(PROJECT_PREFIX)$(PROJECT_NAME).a
+TARGET_STATIC =  $(TARGET_DIR)/$(PROJECT_PREFIX)$(TARGET_NAME).a
 {{% elseif PROJECT_TYPE == "dynamic" then %}}
 MYCFLAGS += -fPIC
 TARGET_DIR = $(SOLUTION_DIR)bin
-TARGET_DYNAMIC =  $(TARGET_DIR)/$(PROJECT_PREFIX)$(PROJECT_NAME).so
+TARGET_DYNAMIC =  $(TARGET_DIR)/$(PROJECT_PREFIX)$(TARGET_NAME).so
 #macos系统so链接问题
 ifeq ($(UNAME_S), Darwin)
-LDFLAGS += -install_name $(PROJECT_PREFIX)$(PROJECT_NAME).so
+LDFLAGS += -install_name $(PROJECT_PREFIX)$(TARGET_NAME).so
 endif
 {{% else %}}
 TARGET_DIR = $(SOLUTION_DIR)bin
-TARGET_EXECUTE =  $(TARGET_DIR)/$(PROJECT_NAME)
+TARGET_EXECUTE =  $(TARGET_DIR)/$(TARGET_NAME)
 {{% end %}}
 
 #link添加.so目录
 LDFLAGS += -L$(TARGET_DIR)
 
 #自动生成目标
-OBJS=
+OBJS =
 {{% if next(OBJS) then %}}
 {{% local OBJS = table.concat(OBJS, "") %}}
-COBJS = $(patsubst %.c, $(INT_DIR)/%.o, {{%= OBJS %}}))
-MOBJS = $(patsubst %.m, $(INT_DIR)/%.o, $(COBJS)))
-CCOBJS = $(patsubst %.cc, $(INT_DIR)/%.o, $(MOBJS)))
-OBJS = $(patsubst %.cpp, $(INT_DIR)/%.o, $(CCOBJS)))
+COBJS = $(patsubst %.c, $(INT_DIR)/%.o, {{%= OBJS %}})
+MOBJS = $(patsubst %.m, $(INT_DIR)/%.o, $(COBJS))
+CCOBJS = $(patsubst %.cc, $(INT_DIR)/%.o, $(MOBJS))
+OBJS = $(patsubst %.cpp, $(INT_DIR)/%.o, $(CCOBJS))
 {{% else %}}
 {{% for _, sub_dir in pairs(SUB_DIR or {}) do %}}
 #子目录
