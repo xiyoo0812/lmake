@@ -96,7 +96,7 @@ local function encrypt(md5state)
     return buffer_to_hex(spack("I4 I4 I4 I4", tunpack(md5state.state)))
 end
 
-local function MakeGuid(str)
+local function new_guid(str)
     local md5state = {
         state = { 0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476 },
         bit_count = 0,
@@ -105,4 +105,4 @@ local function MakeGuid(str)
     return encrypt(md5state)
 end
 
-return MakeGuid
+return { new_guid = new_guid }

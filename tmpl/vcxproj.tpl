@@ -1,10 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-{{% local lfs = require "lfs" %}}
-{{% local MakeGuid = require "lguid" %}}
-{{% local FMT_LIBS = table.concat(LIBS or {}, ";") %}}
+{{% local ALL_LIBS = {} %}}
+{{% for _, def_lib in pairs(LIBS or {}) do %}}
+{{%   table.insert(ALL_LIBS, def_lib .. ".lib") %}}
+{{% end %}}
+{{% for _, def_lib in pairs(WIN32_LIBS or {}) do %}}
+{{%   table.insert(ALL_LIBS, def_lib .. ".lib") %}}
+{{% end %}}
+{{% local FMT_LIBS = table.concat(ALL_LIBS, ";") %}}
 {{% local FMT_INCLUDES = table.concat(INCLUDES or {}, ";") %}}
-{{% local FMT_DEFINES = table.concat(WIN32_DEFINES or {}, ";") %}}
-{{% local FMT_WIN_LIBS = table.concat(WIN32_LIBS or {}, ";") %}}
+{{% local FMT_DEFINES = table.concat(DEFINES or {}, ";") %}}
+{{% local FMT_WIN_DEFINES = table.concat(WIN32_DEFINES or {}, ";") %}}
 {{% local FMT_LIBRARY_DIR = table.concat(LIBRARY_DIR or {}, ";") %}}
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
@@ -41,7 +46,7 @@
     <ClCompile Include="mimalloc\src\stats.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{ {{%= MakeGuid(PROJECT_NAME) %}} }</ProjectGuid>
+    <ProjectGuid>{ {{%= GUID_NEW(PROJECT_NAME) %}} }</ProjectGuid>
     <RootNamespace>{{%= PROJECT_NAME }}</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
@@ -101,7 +106,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>{{%= FMT_INCLUDES %}};%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>RELEASEDEBUG;WIN32;NDEBUG;_WINDOWS;{{%= FMT_DEFINES %}};%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>RELEASEDEBUG;WIN32;NDEBUG;_WINDOWS;{{%= FMT_DEFINES %}};{{%= FMT_WIN_DEFINES %}};%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -129,7 +134,7 @@
       {{% end %}}
       <TargetMachine>MachineX86</TargetMachine>
       <ProgramDatabaseFile>$(SolutionDir)temp\$(ProjectName)\$(Platform)\$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalDependencies>{{%= FMT_LIBS %}};{{%= FMT_WIN_LIBS %}};%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>{{%= FMT_LIBS %}};%(AdditionalDependencies)</AdditionalDependencies>
       <ForceFileOutput>
       </ForceFileOutput>
     </Link>
@@ -151,7 +156,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>{{%= FMT_INCLUDES %}};%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>RELEASEDEBUG;WIN32;NDEBUG;_WINDOWS;{{%= FMT_DEFINES %}};%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>RELEASEDEBUG;WIN32;NDEBUG;_WINDOWS;{{%= FMT_DEFINES %}};{{%= FMT_WIN_DEFINES %}};%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -175,7 +180,7 @@
       <SubSystem>Windows</SubSystem>
       <ImportLibrary>$(SolutionDir)library/$(Platform)/$(TargetName).lib</ImportLibrary>
       <ProgramDatabaseFile>$(SolutionDir)temp\$(ProjectName)\$(Platform)\$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalDependencies>{{%= FMT_LIBS %}};{{%= FMT_WIN_LIBS %}};%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>{{%= FMT_LIBS %}};%(AdditionalDependencies)</AdditionalDependencies>
       <ForceFileOutput>
       </ForceFileOutput>
     </Link>
