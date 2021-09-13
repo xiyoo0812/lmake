@@ -9,6 +9,7 @@ local sgsub         = string.gsub
 local sfind         = string.find
 local sformat       = string.format
 local smatch        = string.match
+local sgmatch       = string.gmatch
 local tinsert       = table.insert
 local tsort         = table.sort
 
@@ -72,6 +73,12 @@ local function lmak_file_title(filename)
     end
 end
 
+local function lmak_guid(title)
+    for char in sgmatch(title, ".+") do
+        
+    end
+end
+
 --生成项目文件
 --proj_dir：项目目录
 --lmake_dir：项目目录相对于lmake的路径
@@ -94,7 +101,7 @@ local function build_projfile(proj_dir, lmake_dir)
             local vcxproj = stripextension(file_name) .. ".vcxproj"
             local env = ltmpl.render_file(lmake_dir .. slash .. "tmpl/make.tpl", makfile, file_name)
             --ltmpl.render_file("./tmpl/vcxproj.tpl", vcxproj, file_name)
-            tinsert(vcxprojs, {dir = mak_dir, file = strippath(vcxproj), deps = env.DEPS, guid = env.GUID})
+            tinsert(vcxprojs, {dir = mak_dir, file = strippath(vcxproj), name = env.PROJECT_NAME, deps = env.DEPS })
             tinsert(makefiles, {dir = mak_dir, file = strippath(makfile), name = env.PROJECT_NAME, deps = env.DEPS })
         end
         :: continue ::

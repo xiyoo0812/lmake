@@ -1,0 +1,167 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31313.79
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "luna", "core\luna\luna.vcxproj", "{EC17EC6B-B66F-44C1-812F-7397E2D216C4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "luabus", "core\luabus\luabus.vcxproj", "{50149E84-CB12-4C94-A648-CF522614804F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+		{EC17EC6B-B66F-44C1-812F-7397E2D216C4} = {EC17EC6B-B66F-44C1-812F-7397E2D216C4}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "quanta", "core\quanta\quanta.vcxproj", "{550BE128-1E8D-44A1-83FA-F579ECD6838B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EC17EC6B-B66F-44C1-812F-7397E2D216C4} = {EC17EC6B-B66F-44C1-812F-7397E2D216C4}
+		{50149E84-CB12-4C94-A648-CF522614804F} = {50149E84-CB12-4C94-A648-CF522614804F}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "all", "all", "{1D4D6BAB-BDCA-48C7-B032-575D40D1D349}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{F70FF6C0-FD69-49DD-A63B-54CD33AA35DB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua", "extend\luaext\lua\lua.vcxproj", "{F56A5D0B-0CEE-4EE0-BE86-BDCB98143307}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "luac", "extend\luaext\lua\luac.vcxproj", "{001BCFDF-426A-476B-B709-D7E40A374229}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lualib", "extend\luaext\lua\lualib.vcxproj", "{04A56D34-22A4-407E-8027-8EA5CFF8B751}"
+	ProjectSection(ProjectDependencies) = postProject
+		{91015BA1-5926-4D20-BD3F-DAB9C0BB4CB0} = {91015BA1-5926-4D20-BD3F-DAB9C0BB4CB0}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lua", "lua", "{B8068069-EF2B-41CB-8E44-22C6AC563147}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ext", "ext", "{76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bson", "extend\luaext\bson\bson.vcxproj", "{D006D7B6-1807-4BD4-BF1A-9510B170DFE5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lcrypt", "extend\luaext\lcrypt\lcrypt.vcxproj", "{75EBBA96-B1C0-48EC-A3C9-61481AB0D3D0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lfs", "extend\luaext\lfs\lfs.vcxproj", "{3D32C183-3733-44C4-BE9F-EFD213D07900}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lnet", "extend\luaext\lnet\lnet.vcxproj", "{623A966A-1F99-450C-8BE1-D17F3FE84620}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lpeg", "extend\luaext\lpeg\lpeg.vcxproj", "{568D6F01-6547-475B-B0C9-4D29DC9A6EA1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lcjson", "extend\luaext\lcjson\lcjson.vcxproj", "{47B1F51B-70AA-4C21-993D-66BA5B831C67}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lualog", "extend\luaext\lualog\lualog.vcxproj", "{C2DD1C67-5A7A-48F9-A860-FE4B92F6D1BD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "luaxlsx", "extend\luaext\luaxlsx\luaxlsx.vcxproj", "{C1D0F16D-0B61-4B54-92B2-4A612BB0673B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mongo", "extend\luaext\mongo\mongo.vcxproj", "{954AC35E-1774-47FF-ADF1-5F65E97FB615}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pbc", "extend\luaext\pbc\pbc.vcxproj", "{072B788A-F4A1-4FB5-83F0-633A4FE5DB5E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lhttp", "extend\luaext\lhttp\lhttp.vcxproj", "{F582EF81-3D4F-4276-B63A-87863FAA483C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lcurl", "extend\luaext\lcurl\lcurl.vcxproj", "{B57BBE3F-7D7A-4B1C-A3AD-DB69B535C5E4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ltimer", "extend\luaext\ltimer\ltimer.vcxproj", "{6E4BA694-DA12-40AF-9597-E54E12BED096}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lbuffer", "extend\luaext\lbuffer\lbuffer.vcxproj", "{DDEA1A95-D02A-411F-B34A-ABFFCA7FF63C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {04A56D34-22A4-407E-8027-8EA5CFF8B751}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "share", "share", "{9E751922-A092-4CEE-A245-58975B355E33}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mimalloc", "extend\mimalloc\mimalloc.vcxproj", "{91015BA1-5926-4D20-BD3F-DAB9C0BB4CB0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		ReleaseDebug|x64 = ReleaseDebug|x64
+		ReleaseDebug|x86 = ReleaseDebug|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+{{% for _, proj_info in pairs(PROJECTS or {}) do %}}
+		{ {{%= proj_info.GUID %}} }.ReleaseDebug|x64.ActiveCfg = ReleaseDebug|x64
+		{ {{%= proj_info.GUID %}} }.ReleaseDebug|x64.Build.0 = ReleaseDebug|x64
+		{ {{%= proj_info.GUID %}} }.ReleaseDebug|x86.ActiveCfg = ReleaseDebug|Win32
+		{ {{%= proj_info.GUID %}} }.ReleaseDebug|x86.Build.0 = ReleaseDebug|Win32
+{{% end %}}
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+{{% for _, proj_info in pairs(PROJECTS or {}) do %}}
+		{EC17EC6B-B66F-44C1-812F-7397E2D216C4} = {F70FF6C0-FD69-49DD-A63B-54CD33AA35DB}
+		{50149E84-CB12-4C94-A648-CF522614804F} = {F70FF6C0-FD69-49DD-A63B-54CD33AA35DB}
+		{550BE128-1E8D-44A1-83FA-F579ECD6838B} = {F70FF6C0-FD69-49DD-A63B-54CD33AA35DB}
+		{F70FF6C0-FD69-49DD-A63B-54CD33AA35DB} = {1D4D6BAB-BDCA-48C7-B032-575D40D1D349}
+		{F56A5D0B-0CEE-4EE0-BE86-BDCB98143307} = {B8068069-EF2B-41CB-8E44-22C6AC563147}
+		{001BCFDF-426A-476B-B709-D7E40A374229} = {B8068069-EF2B-41CB-8E44-22C6AC563147}
+		{04A56D34-22A4-407E-8027-8EA5CFF8B751} = {B8068069-EF2B-41CB-8E44-22C6AC563147}
+		{B8068069-EF2B-41CB-8E44-22C6AC563147} = {1D4D6BAB-BDCA-48C7-B032-575D40D1D349}
+		{76CCF6B8-BEC6-4AC9-A287-7BF2440030AC} = {1D4D6BAB-BDCA-48C7-B032-575D40D1D349}
+		{D006D7B6-1807-4BD4-BF1A-9510B170DFE5} = {76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}
+		{75EBBA96-B1C0-48EC-A3C9-61481AB0D3D0} = {76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}
+		{3D32C183-3733-44C4-BE9F-EFD213D07900} = {76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}
+		{623A966A-1F99-450C-8BE1-D17F3FE84620} = {76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}
+		{568D6F01-6547-475B-B0C9-4D29DC9A6EA1} = {76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}
+		{47B1F51B-70AA-4C21-993D-66BA5B831C67} = {76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}
+		{C2DD1C67-5A7A-48F9-A860-FE4B92F6D1BD} = {76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}
+		{C1D0F16D-0B61-4B54-92B2-4A612BB0673B} = {76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}
+		{954AC35E-1774-47FF-ADF1-5F65E97FB615} = {76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}
+		{072B788A-F4A1-4FB5-83F0-633A4FE5DB5E} = {76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}
+		{F582EF81-3D4F-4276-B63A-87863FAA483C} = {76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}
+		{B57BBE3F-7D7A-4B1C-A3AD-DB69B535C5E4} = {76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}
+		{6E4BA694-DA12-40AF-9597-E54E12BED096} = {76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}
+		{DDEA1A95-D02A-411F-B34A-ABFFCA7FF63C} = {76CCF6B8-BEC6-4AC9-A287-7BF2440030AC}
+		{9E751922-A092-4CEE-A245-58975B355E33} = {1D4D6BAB-BDCA-48C7-B032-575D40D1D349}
+		{91015BA1-5926-4D20-BD3F-DAB9C0BB4CB0} = {9E751922-A092-4CEE-A245-58975B355E33}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {63D02246-6BAD-4132-9325-6DDF29305452}
+	EndGlobalSection
+EndGlobal
