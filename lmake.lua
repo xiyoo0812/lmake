@@ -49,12 +49,11 @@ local function init_projects(env, projects)
     local lguid = require("lguid")
     for i = #projects, 1, -1 do
         local proj = projects[i]
-        local gname = proj.GROUP or "proj"
+        local gname = proj.GROUP
         if not groups[gname] then
             fmt_groups = gname .. " " .. fmt_groups
             groups[gname] = { NAME = gname, GUID = lguid.guid(gname), PROJECTS = {} }
         end
-        proj.GROUP = gname
         groups[gname].INDEX = i
         tinsert(groups[gname].PROJECTS, 1, proj)
     end
@@ -156,6 +155,7 @@ local function build_projfile(proj_dir, lmake_dir)
                 DIR = mak_dir,
                 DEPS = env.DEPS,
                 NAME = env.PROJECT_NAME,
+                GROUP = env.GROUP or "proj",
                 FILE = get_file_title(file_name),
                 GUID = lguid.guid(env.PROJECT_NAME)
             })
