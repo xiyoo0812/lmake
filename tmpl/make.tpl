@@ -36,16 +36,20 @@ LDFLAGS =
 {{% for _, define in pairs(DEFINES or {}) do %}}
 LDFLAGS += -D{{%= define %}}
 {{% end %}}
+{{% if #LINUX_DEFINES > 0 then %}}
 ifeq ($(UNAME_S), Linux)
 {{% for _, define in pairs(LINUX_DEFINES or {}) do %}}
 LDFLAGS += -D{{%= define %}}
 {{% end %}}
 endif
+{{% end %}}
+{{% if #DARWIN_DEFINES > 0 then %}}
 ifeq ($(UNAME_S), Darwin)
 {{% for _, define in pairs(DARWIN_DEFINES or {}) do %}}
 LDFLAGS += -D{{%= define %}}
 {{% end %}}
 endif
+{{% end %}}
 
 #需要附件link库目录
 {{% for _, lib_dir in pairs(LIBRARY_DIR or {}) do %}}

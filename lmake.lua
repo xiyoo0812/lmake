@@ -145,18 +145,18 @@ local function build_projfile(proj_dir, lmake_dir)
         if is_lmak_file(file_name) then
             local env = init_env(proj_dir .. slash)
             local mak_dir = sgsub(proj_dir, work_dir, "")
-            local file_title = get_file_title(file_name)
+            local file_root = get_file_root(file_name)
             if not load_env_file(lmake_dir .. slash .. "share.lua", env) then
                 error("load share lmake file failed")
                 return
             end
-            ltmpl.render_file(lmake_dir .. slash .. "tmpl/make.tpl", file_title .. ".mak", env, file_name)
-            --ltmpl.render_file("./tmpl/vcxproj.tpl", file_title .. ".vcxproj", file_name)
+            ltmpl.render_file(lmake_dir .. slash .. "tmpl/make.tpl", file_root .. ".mak", env, file_name)
+            --ltmpl.render_file("./tmpl/vcxproj.tpl", file_root .. ".vcxproj", file_name)
             tinsert(projects, {
                 DIR = mak_dir,
-                FILE = file_title,
                 DEPS = env.DEPS,
                 NAME = env.PROJECT_NAME,
+                FILE = get_file_title(file_name),
                 GUID = lguid.guid(env.PROJECT_NAME)
             })
         end
