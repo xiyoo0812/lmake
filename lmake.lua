@@ -1,11 +1,9 @@
 --lmake.lua
 local lfs           = require("lfs")
-local lguid         = require("lguid")
 
 local ldir          = lfs.dir
 local lcurdir       = lfs.currentdir
 local lattributes   = lfs.attributes
-local nguid         = lguid.new_guid
 local ssub          = string.sub
 local sgsub         = string.gsub
 local sfind         = string.find
@@ -48,17 +46,20 @@ local function init_projects(env, projects)
     local groups = {}
     local fmt_groups = ""
     tsort(projects, project_sort)
+    local lguid = require("lguid")
     for i = #projects, 1, -1 do
         local proj = projects[i]
         local gname = proj.GROUP or "proj"
         if not groups[gname] then
             fmt_groups = gname .. " " .. fmt_groups
-            groups[gname] = { GROUP = gname, GUID = nguid(gname), PROJECTS = {} }
+            groups[gname] = { NAME = gname, GUID = lguid.guid(gname), PROJECTS = {} }
         end
+        proj.GROUP = gname
         groups[gname].INDEX = i
-        tinsert(groups[gname].PROJECTS, proj, 1)
+        tinsert(groups[gname].PROJECTS, 1, proj)
     end
     tsort(groups, group_sort)
+    env.GUID_NEW = lguid.guid
     env.FMT_GROUPS = fmt_groups
     env.GROUPS = groups
 end
@@ -100,20 +101,36 @@ local function is_lmak_file(filename)
 end
 
 local function init_env(work_dir)
+    local lguid = require("lguid")
     return {
         LFS_DIR     = ldir,
-        GUID_NEW    = nguid,
         WORK_DIR    = work_dir,
         LFS_ATTR    = lattributes,
         FILE_EXT    = get_file_ext,
         FILE_TIT    = get_file_title,
+        GUID_NEW    = lguid.guid,
     }
+end
+
+local function load_env_file(file, env)
+    local func, err = loadfile(file, "bt", env)
+    if not func then
+        error(sformat("load lmake file failed :%s", err))
+        return false
+    end
+    local ok, res = pcall(func)
+    if not ok then
+        error(sformat("load lmake file failed :%s", res))
+        return false
+    end
+    return true
 end
 
 --生成项目文件
 --proj_dir：项目目录
 --lmake_dir：项目目录相对于lmake的路径
 local function build_projfile(proj_dir, lmake_dir)
+    local lguid = require("lguid")
     local ltmpl = require("ltemplate.ltemplate")
     for file in ldir(proj_dir) do
         if file == "." or file == ".." then
@@ -128,16 +145,19 @@ local function build_projfile(proj_dir, lmake_dir)
         if is_lmak_file(file_name) then
             local env = init_env(proj_dir .. slash)
             local mak_dir = sgsub(proj_dir, work_dir, "")
-            local file_root = get_file_root(file_name)
-            ltmpl.render_file(lmake_dir .. slash .. "tmpl/make.tpl", file_root .. ".mak", env, file_name)
-            --ltmpl.render_file("./tmpl/vcxproj.tpl", file_root .. ".vcxproj", file_name)
+            local file_title = get_file_title(file_name)
+            if not load_env_file(lmake_dir .. slash .. "share.lua", env) then
+                error("load share lmake file failed")
+                return
+            end
+            ltmpl.render_file(lmake_dir .. slash .. "tmpl/make.tpl", file_title .. ".mak", env, file_name)
+            --ltmpl.render_file("./tmpl/vcxproj.tpl", file_title .. ".vcxproj", file_name)
             tinsert(projects, {
                 DIR = mak_dir,
-                FILE = file_root,
+                FILE = file_title,
                 DEPS = env.DEPS,
-                GROUP = env.GROUP,
                 NAME = env.PROJECT_NAME,
-                GUID = nguid(env.PROJECT_NAME)
+                GUID = lguid.guid(env.PROJECT_NAME)
             })
         end
         :: continue ::
@@ -147,15 +167,9 @@ end
 
 --生成项目文件
 local function build_lmak()
-    local env = init_env(work_dir)
-    local func, err = loadfile(main_make, "bt", env)
-    if not func then
-        error(sformat("load main lmake file failed :%s", err))
-        return
-    end
-    local ok, res = pcall(func)
-    if not ok then
-        error(sformat("load main lmake file failed :%s", res))
+    local env = {}
+    if not load_env_file(main_make, env) then
+        error("load main lmake file failed")
         return
     end
     local solution, lmake_dir = env.SOLUTION, env.LMAKE_DIR
@@ -178,7 +192,7 @@ local function build_lmak()
     init_projects(env, projects)
     local ltmpl = require("ltemplate.ltemplate")
     ltmpl.render_file(lmake_dir .. slash .. "tmpl/makefile.tpl", "Makefile", env)
-    --ltmpl.render_file(lmake_dir .. slash .. "tmpl/Solution.tpl", solution .. ".sln", env)
+    ltmpl.render_file(lmake_dir .. slash .. "tmpl/Solution.tpl", solution .. ".sln", env)
     print(sformat("build solution %s success!", solution))
 end
 

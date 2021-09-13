@@ -9,8 +9,8 @@ local tunpack       = table.unpack
 local function buffer_to_hex(buffer)
     local ret = ""
     for i = 1, #buffer do
-        ret = ret .. sformat("%02x", sbyte(buffer, i))
-        if i == 8 || i == 12 || i == 16 || i == 20 then
+        ret = ret .. sformat("%02X", sbyte(buffer, i))
+        if i == 4 or i == 6 or i == 8 or i == 10 then
             ret = ret .. "-"
         end
     end
@@ -96,7 +96,7 @@ local function encrypt(md5state)
     return buffer_to_hex(spack("I4 I4 I4 I4", tunpack(md5state.state)))
 end
 
-local function new_guid(str)
+local function guid(str)
     local md5state = {
         state = { 0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476 },
         bit_count = 0,
@@ -105,4 +105,4 @@ local function new_guid(str)
     return encrypt(md5state)
 end
 
-return { new_guid = new_guid }
+return { guid = guid }

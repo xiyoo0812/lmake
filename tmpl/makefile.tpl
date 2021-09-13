@@ -16,9 +16,9 @@ clean:
 
 {{% for _, GROUP in pairs(GROUPS or {}) do %}}
 {{%= GROUP.NAME %}}:
-{{% 	for _, PROJECT in ipairs(GROUP.PROJECTS or {}) do %}}
+{{% for _, PROJECT in ipairs(GROUP.PROJECTS or {}) do %}}
 	cd {{%= PROJECT.DIR %}}; make SOLUTION_DIR=$(CUR_DIR) -f {{%= PROJECT.FILE %}}.mak;
-{{% 	end %}}
+{{% end %}}
 
 
 {{% end %}}

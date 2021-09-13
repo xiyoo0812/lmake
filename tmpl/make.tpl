@@ -78,15 +78,19 @@ LIBS += -lm -ldl -lstdc++
 {{% for _, lib in pairs(LIBS) do %}}
 LIBS += -l{{%= lib %}}
 {{% end %}}
+{{% if #LINUX_LIBS > 0 then %}}
 ifeq ($(UNAME_S), Linux)
 {{% for _, lib in pairs(LINUX_LIBS) do %}}
 LIBS += -l{{%= lib %}}
 {{% end %}}
+endif
 {{% end %}}
+{{% if #DARWIN_LIBS > 0 then %}}
 ifeq ($(UNAME_S), Darwin)
 {{% for _, lib in pairs(DARWIN_LIBS) do %}}
 LIBS += -l{{%= lib %}}
 {{% end %}}
+endif
 {{% end %}}
 
 #定义基础的编译选项
