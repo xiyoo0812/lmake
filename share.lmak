@@ -2,7 +2,7 @@
 
 --标准库版本
 ---std=gnu99/-std=c++11/-std=c++14
-STDC = "-std=c++11"
+STDC = "-std=gnu99"
 
 --需要的FLAGS
 FLAGS = {
@@ -14,6 +14,10 @@ INCLUDES = {
 
 --目标文件前缀
 --LIB_PREFIX = 1
+
+--需要定义的选项
+DEFINES = {
+}
 
 --LINUX需要定义的选项
 LINUX_DEFINES = {
@@ -51,6 +55,14 @@ LIBS = {
 
 --WIN32需要连接的库文件
 WIN32_LIBS = {
+}
+
+--LINUX需要连接的库文件
+LINUX_LIBS = {
+}
+
+--DARWIN需要连接的库文件
+DARWIN_LIBS = {
 }
 
 --WIN32预编译的库文件，需要copy到bin目录

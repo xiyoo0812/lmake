@@ -32,7 +32,10 @@ MYCFLAGS += -I{{%= include %}}
 {{% end %}}
 
 #需要定义的选项
-LDFLAGS = 
+LDFLAGS =
+{{% for _, define in pairs(DEFINES or {}) do %}}
+LDFLAGS += -D{{%= define %}}
+{{% end %}}
 ifeq ($(UNAME_S), Linux)
 {{% for _, define in pairs(LINUX_DEFINES or {}) do %}}
 LDFLAGS += -D{{%= define %}}
@@ -74,6 +77,16 @@ LIBS += -lm -ldl -lstdc++
 #自定义库
 {{% for _, lib in pairs(LIBS) do %}}
 LIBS += -l{{%= lib %}}
+{{% end %}}
+ifeq ($(UNAME_S), Linux)
+{{% for _, lib in pairs(LINUX_LIBS) do %}}
+LIBS += -l{{%= lib %}}
+{{% end %}}
+{{% end %}}
+ifeq ($(UNAME_S), Darwin)
+{{% for _, lib in pairs(DARWIN_LIBS) do %}}
+LIBS += -l{{%= lib %}}
+{{% end %}}
 {{% end %}}
 
 #定义基础的编译选项
