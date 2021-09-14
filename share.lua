@@ -1,8 +1,11 @@
 --share.lmak
 
 --标准库版本
---gnu99/c++11/c++14/c++17/c++20
+--gnu99/gnu11/gnu17
 STDC = "gnu99"
+
+--c++11/c++14/c++17/c++20
+STDCPP = "c++14"
 
 --需要的FLAGS
 FLAGS = {

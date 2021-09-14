@@ -11,7 +11,7 @@ UNAME_S = $(shell uname -s)
 .PHONY: clean all target pre_build post_build
 all : pre_build target post_build
 
-#FLAG
+#CFLAG
 MYCFLAGS =
 
 #需要定义的FLAG
@@ -19,11 +19,16 @@ MYCFLAGS =
 MYCFLAGS += -{{%= flag %}}
 {{% end %}}
 
-
 {{% if STDC then %}}
-#标准库版本
-#gnu99/c++11/c++14/c++17/c++20
-MYCFLAGS += -std={{%= STDC %}}
+#c标准库版本
+#gnu99/gnu11/gnu17
+STDC = -std={{%= STDC %}}
+{{% end %}}
+
+{{% if STDCPP then %}}
+#c++标准库版本
+#c++11/c++14/c++17/c++20
+STDCPP = -std={{%= STDCPP %}}
 {{% end %}}
 
 #需要的include目录
@@ -32,24 +37,26 @@ MYCFLAGS += -I{{%= include %}}
 {{% end %}}
 
 #需要定义的选项
-LDFLAGS =
 {{% for _, define in pairs(DEFINES or {}) do %}}
-LDFLAGS += -D{{%= define %}}
+MYCFLAGS += -D{{%= define %}}
 {{% end %}}
 {{% if #LINUX_DEFINES > 0 then %}}
 ifeq ($(UNAME_S), Linux)
 {{% for _, define in pairs(LINUX_DEFINES or {}) do %}}
-LDFLAGS += -D{{%= define %}}
+MYCFLAGS += -D{{%= define %}}
 {{% end %}}
 endif
 {{% end %}}
 {{% if #DARWIN_DEFINES > 0 then %}}
 ifeq ($(UNAME_S), Darwin)
 {{% for _, define in pairs(DARWIN_DEFINES or {}) do %}}
-LDFLAGS += -D{{%= define %}}
+MYCFLAGS += -D{{%= define %}}
 {{% end %}}
 endif
 {{% end %}}
+
+#LDFLAGS
+LDFLAGS =
 
 #需要附件link库目录
 {{% for _, lib_dir in pairs(LIBRARY_DIR or {}) do %}}
@@ -100,8 +107,8 @@ endif
 #定义基础的编译选项
 CC = gcc
 CX = c++
-CFLAGS = -g -O2 -Wall -Wno-deprecated -Wextra -Wno-unknown-pragmas $(MYCFLAGS)
-CXXFLAGS = -g -O2 -Wall -Wno-deprecated -Wextra -Wno-unknown-pragmas $(MYCFLAGS)
+CFLAGS = -g -O2 -Wall -Wno-deprecated -Wextra -Wno-unknown-pragmas $(STDC) $(MYCFLAGS)
+CXXFLAGS = -g -O2 -Wall -Wno-deprecated -Wextra -Wno-unknown-pragmas $(STDCPP) $(MYCFLAGS)
 
 #项目目录
 ifndef SOLUTION_DIR
@@ -151,12 +158,10 @@ OBJS = $(patsubst %.cpp, $(INT_DIR)/%.o, $(CCOBJS))
 {{% else %}}
 {{% for _, sub_dir in pairs(SUB_DIR or {}) do %}}
 #子目录
-SUB_SRC_DIR = $(SRC_DIR)/{{%= sub_dir%}}
-SUB_INT_DIR = $(INT_DIR)/{{%= sub_dir%}}
-OBJS += $(patsubst $(SUB_SRC_DIR)/%.cpp, $(SUB_INT_DIR)/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SUB_SRC_DIR)/*.cpp)))
-OBJS += $(patsubst $(SUB_SRC_DIR)/%.cc, $(SUB_INT_DIR)/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SUB_SRC_DIR)/*.c)))
-OBJS += $(patsubst $(SUB_SRC_DIR)/%.c, $(SUB_INT_DIR)/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SUB_SRC_DIR)/*.cc)))
-OBJS += $(patsubst $(SUB_SRC_DIR)/%.m, $(SUB_INT_DIR)/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SUB_SRC_DIR)/*.m)))
+OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.cpp, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.cpp)))
+OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.cc, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.c)))
+OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.c, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.cc)))
+OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.m, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.m)))
 {{% end %}}
 #根目录
 OBJS += $(patsubst $(SRC_DIR)/%.cpp, $(INT_DIR)/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/*.cpp)))
@@ -165,15 +170,21 @@ OBJS += $(patsubst $(SRC_DIR)/%.cc, $(INT_DIR)/%.o, $(filter-out $(EXCLUDE), $(w
 OBJS += $(patsubst $(SRC_DIR)/%.m, $(INT_DIR)/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/*.m)))
 {{% end %}}
 
+{{% if PROJECT_TYPE == "static" then %}}
 $(TARGET_STATIC) : $(OBJS)
 	ar rcs $@ $(OBJS)
 	ranlib $@
+{{% end %}}
 
+{{% if PROJECT_TYPE == "dynamic" then %}}
 $(TARGET_DYNAMIC) : $(OBJS)
-	$(CC) -o $@ -shared $(OBJS) $(LDFLAGS) $(LIBS) 
+	$(CC) -o $@ -shared $(OBJS) $(LDFLAGS) $(LIBS)
+{{% end %}}
 
+{{% if PROJECT_TYPE == "exe" then %}}
 $(TARGET_EXECUTE) : $(OBJS)
-	$(CC) -o $@  $(OBJS) $(LDFLAGS) $(LIBS) 
+	$(CC) -o $@  $(OBJS) $(LDFLAGS) $(LIBS)
+{{% end %}}
 
 # 编译所有源文件
 $(INT_DIR)/%.o : $(SRC_DIR)/%.cpp
@@ -195,7 +206,7 @@ target : $(TARGET_EXECUTE)
 {{% end %}}
 
 #clean伪目标
-clean : 
+clean :
 	rm -rf $(INT_DIR)
 
 #预编译
@@ -203,7 +214,7 @@ pre_build:
 	mkdir -p $(INT_DIR)
 	mkdir -p $(TARGET_DIR)
 {{% for _, sub_dir in pairs(SUB_DIR or {}) do %}}
-	mkdir -p {{%= sub_dir %}}
+	mkdir -p $(INT_DIR)/{{%= sub_dir %}}
 {{% end %}}
 
 #后编译
