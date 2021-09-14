@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  {{% local GROUPS = {} %}}
   {{% local STDAFX = nil %}}
+  {{% local TEMPS, GROUPS = {}, {} %}}
   {{% local ARGS = {SUB_DIR = SUB_DIR, OBJS = OBJS, EXCLUDE_FILE = EXCLUDE_FILE } %}}
   {{% local CINCLUDES, CSOURCES = COLLECT(WORK_DIR, SRC_DIR, ARGS) %}}
   <ItemGroup>
@@ -10,7 +10,7 @@
       {{% STDAFX = CINC[1] %}}
     {{% else %}}
     <ClInclude Include="{{%= CINC[1] %}}">
-      {{% GROUPS[CINC[2]] = true %}}
+      {{% TEMPS[CINC[2]] = true %}}
       <Filter>{{%= CINC[2] %}}</Filter>
     </ClInclude>
     {{% end %}}
@@ -19,7 +19,7 @@
   <ItemGroup>
   {{% for _, CSRC in pairs(CSOURCES or {}) do %}}
     <ClCompile Include="{{%= CSRC[1] %}}">
-      {{% GROUPS[CSRC[2]] = true %}}
+      {{% TEMPS[CSRC[2]] = true %}}
       <Filter>{{%= CSRC[2] %}}</Filter>
     </ClCompile>
   {{% end %}}
@@ -30,7 +30,11 @@
   </ItemGroup>
   {{% end %}}
   <ItemGroup>
-  {{% for GROUP in pairs(GROUPS or {}) do %}}
+  {{% for GROUP in pairs(TEMPS or {}) do %}}
+    {{% table.insert(GROUPS, GROUP) %}}
+  {{% end %}}
+  {{% table.sort(GROUPS, function(a, b) return a < b end) %}}
+  {{% for _, GROUP in pairs(GROUPS or {}) do %}}
     <Filter Include="{{%= GROUP %}}">
       <UniqueIdentifier >{{{%= GUID_NEW(GROUP) %}}}</UniqueIdentifier>
     </Filter>
