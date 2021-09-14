@@ -158,50 +158,48 @@ OBJS = $(patsubst %.cpp, $(INT_DIR)/%.o, $(CCOBJS))
 {{% else %}}
 {{% for _, sub_dir in pairs(SUB_DIR or {}) do %}}
 #子目录
-OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.cpp, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.cpp)))
-OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.cc, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.c)))
-OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.c, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.cc)))
+OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.c, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.c)))
 OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.m, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.m)))
+OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.cc, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.cc)))
+OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.cpp, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.cpp)))
 {{% end %}}
 #根目录
-OBJS += $(patsubst $(SRC_DIR)/%.cpp, $(INT_DIR)/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/*.cpp)))
 OBJS += $(patsubst $(SRC_DIR)/%.c, $(INT_DIR)/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/*.c)))
-OBJS += $(patsubst $(SRC_DIR)/%.cc, $(INT_DIR)/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/*.cc)))
 OBJS += $(patsubst $(SRC_DIR)/%.m, $(INT_DIR)/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/*.m)))
+OBJS += $(patsubst $(SRC_DIR)/%.cc, $(INT_DIR)/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/*.cc)))
+OBJS += $(patsubst $(SRC_DIR)/%.cpp, $(INT_DIR)/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/*.cpp)))
 {{% end %}}
+
+# 编译所有源文件
+$(INT_DIR)/%.o : $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+$(INT_DIR)/%.o : $(SRC_DIR)/%.m
+	$(CC) $(CFLAGS) -c $< -o $@
+$(INT_DIR)/%.o : $(SRC_DIR)/%.cc
+	$(CX) $(CXXFLAGS) -c $< -o $@
+$(INT_DIR)/%.o : $(SRC_DIR)/%.cpp
+	$(CX) $(CXXFLAGS) -c $< -o $@
 
 {{% if PROJECT_TYPE == "static" then %}}
 $(TARGET_STATIC) : $(OBJS)
 	ar rcs $@ $(OBJS)
 	ranlib $@
-{{% end %}}
 
+#target伪目标
+target : $(TARGET_STATIC)
+{{% end %}}
 {{% if PROJECT_TYPE == "dynamic" then %}}
 $(TARGET_DYNAMIC) : $(OBJS)
 	$(CC) -o $@ -shared $(OBJS) $(LDFLAGS) $(LIBS)
-{{% end %}}
 
+#target伪目标
+target : $(TARGET_DYNAMIC)
+{{% end %}}
 {{% if PROJECT_TYPE == "exe" then %}}
 $(TARGET_EXECUTE) : $(OBJS)
 	$(CC) -o $@  $(OBJS) $(LDFLAGS) $(LIBS)
-{{% end %}}
-
-# 编译所有源文件
-$(INT_DIR)/%.o : $(SRC_DIR)/%.cpp
-	$(CX) $(CXXFLAGS) -c $< -o $@
-$(INT_DIR)/%.o : $(SRC_DIR)/%.cc
-	$(CX) $(CXXFLAGS) -c $< -o $@
-$(INT_DIR)/%.o : $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
-$(INT_DIR)/%.o : $(SRC_DIR)/%.m
-	$(CC) $(CFLAGS) -c $< -o $@
 
 #target伪目标
-{{% if PROJECT_TYPE == "static" then %}}
-target : $(TARGET_STATIC)
-{{% elseif PROJECT_TYPE == "dynamic" then %}}
-target : $(TARGET_DYNAMIC)
-{{% else %}}
 target : $(TARGET_EXECUTE)
 {{% end %}}
 
