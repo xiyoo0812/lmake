@@ -22,8 +22,8 @@ MYCFLAGS += -{{%= flag %}}
 
 {{% if STDC then %}}
 #标准库版本
-#-std=gnu99/-std=c++11/-std=c++14
-MYCFLAGS += {{%= STDC %}}
+#gnu99/c++11/c++14/c++17/c++20
+MYCFLAGS += -std={{%= STDC %}}
 {{% end %}}
 
 #需要的include目录

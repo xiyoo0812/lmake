@@ -1,8 +1,8 @@
 --share.lmak
 
 --标准库版本
----std=gnu99/-std=c++11/-std=c++14
-STDC = "-std=gnu99"
+--gnu99/c++11/c++14/c++17/c++20
+STDC = "gnu99"
 
 --需要的FLAGS
 FLAGS = {
@@ -10,6 +10,10 @@ FLAGS = {
 
 --需要的include目录
 INCLUDES = {
+}
+
+--WINDOWS需要include目录
+WINDOWS_INCLUDES = {
 }
 
 --目标文件前缀
@@ -27,8 +31,8 @@ LINUX_DEFINES = {
 DARWIN_DEFINES = {
 }
 
---WIN32需要定义的选项
-WIN32_DEFINES = {
+--WINDOWS需要定义的选项
+WINDOWS_DEFINES = {
 }
 
 --需要附件link库目录
@@ -36,25 +40,26 @@ LIBRARY_DIR = {
 }
 
 --源文件路径
-SRC_DIR = "./src"
+SRC_DIR = "src"
 
 --子目录路径
 SUB_DIR = {
 }
 
 --需要排除的源文件,目录基于$(SRC_DIR)
-EXCLUDE_FILE={
+EXCLUDE_FILE = {
 }
 
 --是否启用mimalloc库
---MIMALLOC_DIR = "../../extend"
+MIMALLOC_DIR = "../../mimalloc/mimalloc/include"
 
 --需要连接的库文件
 LIBS = {
 }
 
---WIN32需要连接的库文件
-WIN32_LIBS = {
+--WINDOWS需要连接的库文件
+--windows下没有-l自动连接的功能，库文件需要带前后缀
+WINDOWS_LIBS = {
 }
 
 --LINUX需要连接的库文件
@@ -65,8 +70,9 @@ LINUX_LIBS = {
 DARWIN_LIBS = {
 }
 
---WIN32预编译的库文件，需要copy到bin目录
-WIN32_PREBUILDS = {
+--WINDOWS预编译的库文件，需要copy到bin目录
+--建议使用[[]]来包含字符串，否则有\转义问题
+WINDOWS_PREBUILDS = {
 }
 
 --目标文件，可以在这里定义，如果没有定义，share.mak会自动生成
@@ -76,3 +82,6 @@ OBJS = {
 --依赖项目
 DEPS = {
 }
+
+--分组定义
+GROUP = "proj"
