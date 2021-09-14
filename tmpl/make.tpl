@@ -65,7 +65,7 @@ SRC_DIR = ./src
 
 #需要排除的源文件,目录基于$(SRC_DIR)
 EXCLUDE =
-{{% for _, exclude in pairs(EXCLUDES or {}) do %}}
+{{% for _, exclude in pairs(EXCLUDE_FILE or {}) do %}}
 EXCLUDE += $(SRC_DIR)/{{%= exclude %}}
 {{% end %}}
 
@@ -74,7 +74,7 @@ LIBS =
 {{% if MIMALLOC_DIR then %}}
 #是否启用mimalloc库
 LIBS += -lmimalloc -lpthread
-MYCFLAGS += -I{{%= MIMALLOC_DIR %}} -include mimalloc-override.h
+MYCFLAGS += -I{{%= MIMALLOC_DIR %}} -include ../../mimalloc-ex.h
 {{% end %}}
 #系统库
 LIBS += -lm -ldl -lstdc++

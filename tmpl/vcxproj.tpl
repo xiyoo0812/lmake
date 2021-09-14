@@ -112,7 +112,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
       {{% if MIMALLOC_DIR then %}}
-      <ForcedIncludeFiles>../../win-mimalloc.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>../../mimalloc-ex.h</ForcedIncludeFiles>
       {{% end %}}
       {{% if STDC == "c++17" then %}}
       <LanguageStandard>stdcpp17</LanguageStandard>

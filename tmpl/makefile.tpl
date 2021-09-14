@@ -14,6 +14,7 @@ server: {{%= FMT_GROUPS %}}
 clean:
 	rm -rf temp;
 
+{{% table.sort(GROUPS, function(a, b) return a.NAME < b.NAME end) %}}
 {{% for _, GROUP in pairs(GROUPS or {}) do %}}
 {{%= GROUP.NAME %}}:
 {{% for _, PROJECT in ipairs(GROUP.PROJECTS or {}) do %}}
