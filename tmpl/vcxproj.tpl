@@ -114,10 +114,10 @@
       {{% if MIMALLOC_DIR then %}}
       <ForcedIncludeFiles>../../mimalloc-ex.h</ForcedIncludeFiles>
       {{% end %}}
-      {{% if STDC == "c++17" then %}}
+      {{% if STDCPP == "c++17" then %}}
       <LanguageStandard>stdcpp17</LanguageStandard>
       {{% end %}}
-      {{% if STDC == "c++20" then %}}
+      {{% if STDCPP == "c++20" then %}}
       <LanguageStandard>stdcpp20</LanguageStandard>
       {{% end %}}
     </ClCompile>

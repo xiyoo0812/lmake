@@ -38,7 +38,7 @@ DARWIN_DEFINES = {
 WINDOWS_DEFINES = {
 }
 
---需要附件link库目录
+--需要附加link库目录
 LIBRARY_DIR = {
 }
 

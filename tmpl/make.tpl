@@ -15,7 +15,7 @@ all : pre_build target post_build
 MYCFLAGS =
 
 #需要定义的FLAG
-{{% for _, flag in pairs(FLAGS or {}) do %}}
+{{% for _, flag in pairs(FLAGS) do %}}
 MYCFLAGS += -{{%= flag %}}
 {{% end %}}
 
@@ -32,24 +32,24 @@ STDCPP = -std={{%= STDCPP %}}
 {{% end %}}
 
 #需要的include目录
-{{% for _, include in pairs(INCLUDES or {}) do %}}
+{{% for _, include in pairs(INCLUDES) do %}}
 MYCFLAGS += -I{{%= include %}}
 {{% end %}}
 
 #需要定义的选项
-{{% for _, define in pairs(DEFINES or {}) do %}}
+{{% for _, define in pairs(DEFINES) do %}}
 MYCFLAGS += -D{{%= define %}}
 {{% end %}}
 {{% if #LINUX_DEFINES > 0 then %}}
 ifeq ($(UNAME_S), Linux)
-{{% for _, define in pairs(LINUX_DEFINES or {}) do %}}
+{{% for _, define in pairs(LINUX_DEFINES) do %}}
 MYCFLAGS += -D{{%= define %}}
 {{% end %}}
 endif
 {{% end %}}
 {{% if #DARWIN_DEFINES > 0 then %}}
 ifeq ($(UNAME_S), Darwin)
-{{% for _, define in pairs(DARWIN_DEFINES or {}) do %}}
+{{% for _, define in pairs(DARWIN_DEFINES) do %}}
 MYCFLAGS += -D{{%= define %}}
 {{% end %}}
 endif
@@ -58,9 +58,11 @@ endif
 #LDFLAGS
 LDFLAGS =
 
-#需要附件link库目录
-{{% for _, lib_dir in pairs(LIBRARY_DIR or {}) do %}}
+{{% if #LIBRARY_DIR > 0 then %}}
+#需要附加link库目录
+{{% for _, lib_dir in pairs(LIBRARY_DIR) do %}}
 LDFLAGS += -L{{%= lib_dir %}}
+{{% end %}}
 {{% end %}}
 
 #源文件路径
@@ -72,7 +74,7 @@ SRC_DIR = ./src
 
 #需要排除的源文件,目录基于$(SRC_DIR)
 EXCLUDE =
-{{% for _, exclude in pairs(EXCLUDE_FILE or {}) do %}}
+{{% for _, exclude in pairs(EXCLUDE_FILE) do %}}
 EXCLUDE += $(SRC_DIR)/{{%= exclude %}}
 {{% end %}}
 
@@ -156,7 +158,7 @@ MOBJS = $(patsubst %.m, $(INT_DIR)/%.o, $(COBJS))
 CCOBJS = $(patsubst %.cc, $(INT_DIR)/%.o, $(MOBJS))
 OBJS = $(patsubst %.cpp, $(INT_DIR)/%.o, $(CCOBJS))
 {{% else %}}
-{{% for _, sub_dir in pairs(SUB_DIR or {}) do %}}
+{{% for _, sub_dir in pairs(SUB_DIR) do %}}
 #子目录
 OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.c, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.c)))
 OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.m, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.m)))
@@ -211,7 +213,7 @@ clean :
 pre_build:
 	mkdir -p $(INT_DIR)
 	mkdir -p $(TARGET_DIR)
-{{% for _, sub_dir in pairs(SUB_DIR or {}) do %}}
+{{% for _, sub_dir in pairs(SUB_DIR) do %}}
 	mkdir -p $(INT_DIR)/{{%= sub_dir %}}
 {{% end %}}
 
