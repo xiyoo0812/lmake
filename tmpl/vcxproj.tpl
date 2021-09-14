@@ -13,7 +13,7 @@
 {{% for _, WINC in pairs(WINDOWS_INCLUDES or {}) do %}}
 {{% table.insert(INCLUDES, WINC) %}}
 {{% end %}}
-{{% if MIMALLOC_DIR then %}}
+{{% if MIMALLOC and MIMALLOC_DIR then %}}
 {{% table.insert(ALIBS, "mimalloc.lib") %}}
 {{% table.insert(INCLUDES, MIMALLOC_DIR) %}}
 {{% end %}}
@@ -111,7 +111,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
-      {{% if MIMALLOC_DIR then %}}
+      {{% if MIMALLOC and MIMALLOC_DIR then %}}
       <ForcedIncludeFiles>../../mimalloc-ex.h</ForcedIncludeFiles>
       {{% end %}}
       {{% if STDCPP == "c++17" then %}}

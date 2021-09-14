@@ -148,11 +148,12 @@ local function collect_sources(proj_dir, source_dir, args)
 end
 
 --初始化项目环境变量
-local function init_project_env(proj_dir)
+local function init_project_env(proj_dir, bmimalloc)
     local lguid = require("lguid")
     return {
         WORK_DIR    = proj_dir,
         GUID_NEW    = lguid.guid,
+        MIMALLOC    = bmimalloc,
         COLLECT     = collect_sources,
     }
 end
@@ -175,7 +176,7 @@ end
 --生成项目文件
 --proj_dir：项目目录
 --lmake_dir：项目目录相对于lmake的路径
-local function build_projfile(proj_dir, lmake_dir)
+local function build_projfile(proj_dir, lmake_dir, bmimalloc)
     local lguid = require("lguid")
     local ltmpl = require("ltemplate.ltemplate")
     for file in ldir(proj_dir) do
@@ -185,11 +186,11 @@ local function build_projfile(proj_dir, lmake_dir)
         local file_name = proj_dir .. slash .. file
         local attr = lattributes(file_name)
         if attr.mode == "directory" then
-            build_projfile(file_name, lmake_dir)
+            build_projfile(file_name, lmake_dir, bmimalloc)
             goto continue
         end
         if is_lmak_file(file_name) then
-            local env = init_project_env(proj_dir)
+            local env = init_project_env(proj_dir, bmimalloc)
             local mak_dir = sgsub(proj_dir, work_dir, "")
             local file_root = get_file_root(file_name)
             if not load_env_file(lmake_dir .. slash .. "share.lua", env) then
@@ -232,7 +233,7 @@ local function build_lmak()
         local sub_name = work_dir .. file
         local attr = lattributes(sub_name)
         if attr.mode == "directory" then
-            build_projfile(sub_name, lmake_dir)
+            build_projfile(sub_name, lmake_dir, env.USE_MIMALLOC)
         end
         :: continue ::
     end

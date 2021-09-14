@@ -80,7 +80,7 @@ EXCLUDE += $(SRC_DIR)/{{%= exclude %}}
 
 #需要连接的库文件
 LIBS =
-{{% if MIMALLOC_DIR then %}}
+{{% if MIMALLOC and MIMALLOC_DIR then %}}
 #是否启用mimalloc库
 LIBS += -lmimalloc -lpthread
 MYCFLAGS += -I{{%= MIMALLOC_DIR %}} -include ../../mimalloc-ex.h
@@ -147,7 +147,8 @@ TARGET_EXECUTE =  $(TARGET_DIR)/$(TARGET_NAME)
 {{% end %}}
 
 #link添加.so目录
-LDFLAGS += -L$(TARGET_DIR)
+LDFLAGS += -L$(SOLUTION_DIR)bin
+LDFLAGS += -L$(SOLUTION_DIR)library
 
 #自动生成目标
 OBJS =
