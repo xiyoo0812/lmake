@@ -133,6 +133,7 @@ PROJECT_PREFIX =
 {{% if PROJECT_TYPE == "static" then %}}
 TARGET_DIR = $(SOLUTION_DIR)library
 TARGET_STATIC =  $(TARGET_DIR)/$(PROJECT_PREFIX)$(TARGET_NAME).a
+MYCFLAGS += -fPIC
 {{% elseif PROJECT_TYPE == "dynamic" then %}}
 MYCFLAGS += -fPIC
 TARGET_DIR = $(SOLUTION_DIR)bin
