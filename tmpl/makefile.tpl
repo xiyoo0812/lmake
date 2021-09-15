@@ -14,13 +14,15 @@ server: {{%= FMT_GROUPS %}}
 clean:
 	rm -rf temp;
 
-{{% table.sort(GROUPS, function(a, b) return a.NAME < b.NAME end) %}}
+{{% local SORT_GROUPS = {} %}}
 {{% for _, GROUP in pairs(GROUPS or {}) do %}}
+{{% table.insert(SORT_GROUPS, GROUP) %}}
+{{% end %}}
+{{% table.sort(SORT_GROUPS, function(a, b) return a.NAME < b.NAME end) %}}
+{{% for _, GROUP in pairs(SORT_GROUPS or {}) do %}}
 {{%= GROUP.NAME %}}:
 {{% for _, PROJECT in ipairs(GROUP.PROJECTS or {}) do %}}
 	cd {{%= PROJECT.DIR %}}; make SOLUTION_DIR=$(CUR_DIR) -f {{%= PROJECT.FILE %}}.mak;
 {{% end %}}
 
-
 {{% end %}}
-

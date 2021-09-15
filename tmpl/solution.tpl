@@ -7,8 +7,12 @@ MinimumVisualStudioVersion = 10.0.40219.1
 {{% local ALL_GUID = GUID_NEW("@g" .. "all") %}}
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "all", "all", "{{{%= ALL_GUID %}}}"
 EndProject
-{{% table.sort(GROUPS, function(a, b) return a.NAME < b.NAME end) %}}
+{{% local SORT_GROUPS = {} %}}
 {{% for _, GROUP in pairs(GROUPS or {}) do %}}
+{{% table.insert(SORT_GROUPS, GROUP) %}}
+{{% end %}}
+{{% table.sort(SORT_GROUPS, function(a, b) return a.NAME < b.NAME end) %}}
+{{% for _, GROUP in pairs(SORT_GROUPS or {}) do %}}
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "{{%= GROUP.NAME %}}", "{{%= GROUP.NAME %}}", "{{{%= GUID_NEW("@g" .. GROUP.NAME) %}}}"
 EndProject
 {{% for _, PROJECT in ipairs(GROUP.PROJECTS or {}) do %}}
@@ -41,7 +45,7 @@ Global
 	{{% for _, PROJ in pairs(ALL_PROJS or {}) do %}}
 		{{{%= PROJ.GUID %}}} = {{{%= GUID_NEW("@g" .. PROJ.GROUP) %}}}
 	{{% end %}}
-	{{% for _, GROUP in pairs(GROUPS or {}) do %}}
+	{{% for _, GROUP in pairs(SORT_GROUPS or {}) do %}}
 		{{{%= GUID_NEW("@g" .. GROUP.NAME) %}}} = {{{%= ALL_GUID %}}}
 	{{% end %}}
 	EndGlobalSection
