@@ -13,6 +13,9 @@
 {{% for _, WINC in pairs(WINDOWS_INCLUDES or {}) do %}}
 {{% table.insert(INCLUDES, WINC) %}}
 {{% end %}}
+{{% for _, WLDIR in pairs(WINDOWS_LIBRARY_DIR or {}) do %}}
+{{% table.insert(LIBRARY_DIR, WLDIR) %}}
+{{% end %}}
 {{% if MIMALLOC and MIMALLOC_DIR then %}}
 {{% table.insert(ALIBS, "mimalloc.lib") %}}
 {{% table.insert(INCLUDES, MIMALLOC_DIR) %}}

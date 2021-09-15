@@ -42,6 +42,18 @@ WINDOWS_DEFINES = {
 LIBRARY_DIR = {
 }
 
+--WINDOWS需要附加link库目录
+WINDOWS_LIBRARY_DIR = {
+}
+
+--LINUX需要附加link库目录
+LINUX_LIBRARY_DIR = {
+}
+
+--DARWIN需要附加link库目录
+DARWIN_LIBRARY_DIR = {
+}
+
 --源文件路径
 SRC_DIR = "src"
 

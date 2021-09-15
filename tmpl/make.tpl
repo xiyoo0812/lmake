@@ -37,8 +37,10 @@ MYCFLAGS += -I{{%= include %}}
 {{% end %}}
 
 #需要定义的选项
+{{% if #DEFINES > 0 then %}}
 {{% for _, define in pairs(DEFINES) do %}}
 MYCFLAGS += -D{{%= define %}}
+{{% end %}}
 {{% end %}}
 {{% if #LINUX_DEFINES > 0 then %}}
 ifeq ($(UNAME_S), Linux)
@@ -64,12 +66,26 @@ LDFLAGS =
 LDFLAGS += -L{{%= lib_dir %}}
 {{% end %}}
 {{% end %}}
+{{% if #LINUX_LIBRARY_DIR > 0 then %}}
+ifeq ($(UNAME_S), Linux)
+{{% for _, lib_dir in pairs(LINUX_LIBRARY_DIR) do %}}
+LDFLAGS += -L{{%= lib_dir %}}
+{{% end %}}
+endif
+{{% end %}}
+{{% if #DARWIN_LIBRARY_DIR > 0 then %}}
+ifeq ($(UNAME_S), Darwin)
+{{% for _, lib_dir in pairs(DARWIN_LIBRARY_DIR) do %}}
+LDFLAGS += -L{{%= lib_dir %}}
+{{% end %}}
+endif
+{{% end %}}
 
 #源文件路径
 {{% if SRC_DIR then %}}
 SRC_DIR = {{%= SRC_DIR %}}
 {{% else %}}
-SRC_DIR = ./src
+SRC_DIR = src
 {{% end %}}
 
 #需要排除的源文件,目录基于$(SRC_DIR)
@@ -88,8 +104,10 @@ MYCFLAGS += -I{{%= MIMALLOC_DIR %}} -include ../../mimalloc-ex.h
 #系统库
 LIBS += -lm -ldl -lstdc++
 #自定义库
+{{% if #LIBS > 0 then %}}
 {{% for _, lib in pairs(LIBS) do %}}
 LIBS += -l{{%= lib %}}
+{{% end %}}
 {{% end %}}
 {{% if #LINUX_LIBS > 0 then %}}
 ifeq ($(UNAME_S), Linux)
