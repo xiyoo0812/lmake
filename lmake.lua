@@ -91,7 +91,7 @@ local function collect_files(collect_dir, project_dir, source_dir, args, group, 
         local ext_name = lextension(fullname)
         local fmt_name = path_cut(fullname, project_dir)
         if is_hfile then
-            if ext_name == ".h" then
+            if ext_name == ".h" or ext_name == ".hpp" then
                 tinsert(collects, {fmt_name, group, false, false})
             end
             goto continue
