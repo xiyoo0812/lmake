@@ -22,7 +22,8 @@ clean:
 {{% for _, GROUP in pairs(SORT_GROUPS or {}) do %}}
 {{%= GROUP.NAME %}}:
 {{% for _, PROJECT in ipairs(GROUP.PROJECTS or {}) do %}}
-	cd {{%= PROJECT.DIR %}}; make SOLUTION_DIR=$(CUR_DIR) -f {{%= PROJECT.FILE %}}.mak;
+	{{% local fmtname = string.gsub(PROJECT.DIR, '\\', '/') %}}
+	cd {{%= fmtname %}}; make SOLUTION_DIR=$(CUR_DIR) -f {{%= PROJECT.FILE %}}.mak;
 {{% end %}}
 
 {{% end %}}
