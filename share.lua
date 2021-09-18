@@ -15,6 +15,14 @@ FLAGS = {
 INCLUDES = {
 }
 
+--LINUX需要的include目录
+LINUX_INCLUDES = {
+}
+
+--DARWIN需要的include目录
+DARWIN_INCLUDES = {
+}
+
 --WINDOWS需要include目录
 WINDOWS_INCLUDES = {
 }

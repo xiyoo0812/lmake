@@ -35,6 +35,20 @@ STDCPP = -std={{%= STDCPP %}}
 {{% for _, include in pairs(INCLUDES) do %}}
 MYCFLAGS += -I{{%= include %}}
 {{% end %}}
+{{% if #LINUX_INCLUDES > 0 then %}}
+ifeq ($(UNAME_S), Linux)
+{{% for _, include in pairs(LINUX_INCLUDES) do %}}
+MYCFLAGS += -I{{%= include %}}
+{{% end %}}
+endif
+{{% end %}}
+{{% if #DARWIN_INCLUDES > 0 then %}}
+ifeq ($(UNAME_S), Darwin)
+{{% for _, include in pairs(DARWIN_INCLUDES) do %}}
+MYCFLAGS += -I{{%= include %}}
+{{% end %}}
+endif
+{{% end %}}
 
 #需要定义的选项
 {{% if #DEFINES > 0 then %}}
