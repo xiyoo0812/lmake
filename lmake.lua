@@ -29,18 +29,21 @@ end
 
 --项目排序
 local function project_sort(a, b)
-    if tcontain(b.DEPS, a.NAME) then
+    if tcontain(b.ALLDEPS, a.NAME) then
         return true
     end
-    if tcontain(a.DEPS, b.NAME) then
+    if tcontain(a.ALLDEPS, b.NAME) then
         return false
     end
-    return #(a.DEPS) < #(b.DEPS)
+    if #(a.ALLDEPS) == #(b.ALLDEPS) then
+        return a.NAME < b.NAME
+    end
+    return #(a.ALLDEPS) < #(b.ALLDEPS)    
 end
 
 --分组排序
 local function group_sort(a, b)
-    return a.INDEX < b.INDEX
+    return a.INDEX > b.INDEX
 end
 
 --
@@ -61,39 +64,46 @@ end
 --整理依赖
 local function init_project_deps(project, find_name)
     local find_project = projects[find_name]
-    for _, dep_name in ipairs(find_project.DEPS) do
-        tinsert(project.DEPS, dep_name)
-        init_project_deps(project, dep_name)
+    if find_project then
+        for _, dep_name in ipairs(find_project.DEPS) do
+            tinsert(project.ALLDEPS, dep_name)
+            init_project_deps(project, dep_name)
+        end
     end
 end
 
 --初始化solution环境变量
 local function init_solution_env(env)
     local groups = {}
+    local sgroup = {}
     local sprojects = {}
     local fmt_groups = ""
     for name, project in pairs(projects) do
+        project.ALLDEPS = {}
         for _, dep_name in ipairs(project.DEPS) do
+            tinsert(project.ALLDEPS, dep_name)
             init_project_deps(project, dep_name)
         end
         tinsert(sprojects, project)
     end
     tsort(sprojects, project_sort)
     local lguid = require("lguid")
-    for i = #sprojects, 1, -1 do
-        local proj = sprojects[i]
+    for i, proj in ipairs(sprojects) do
         local gname = proj.GROUP
         if not groups[gname] then
-            fmt_groups = gname .. " " .. fmt_groups
+            fmt_groups = fmt_groups .. " " .. gname
             groups[gname] = { NAME = gname, PROJECTS = {} }
         end
         groups[gname].INDEX = i
-        tinsert(groups[gname].PROJECTS, 1, proj)
+        tinsert(groups[gname].PROJECTS, proj)
     end
-    tsort(groups, group_sort)
+    for _, group in pairs(groups) do
+        tinsert(sgroup, group)
+    end
+    tsort(sgroup, group_sort)
     env.GUID_NEW = lguid.guid
     env.FMT_GROUPS = fmt_groups
-    env.GROUPS = groups
+    env.GROUPS = sgroup
 end
 
 --收集文件
