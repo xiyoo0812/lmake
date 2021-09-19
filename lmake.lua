@@ -29,11 +29,11 @@ end
 
 --项目排序
 local function project_sort(a, b)
-    if tcontain(a.DEPS, b.NAME) then
-        return false
-    end
     if tcontain(b.DEPS, a.NAME) then
         return true
+    end
+    if tcontain(a.DEPS, b.NAME) then
+        return false
     end
     return #(a.DEPS) < #(b.DEPS)
 end
@@ -58,14 +58,30 @@ local function path_cut(fullname, basename)
     return relapath
 end
 
+--整理依赖
+local function init_project_deps(project, find_name)
+    local find_project = projects[find_name]
+    for _, dep_name in ipairs(find_project.DEPS) do
+        tinsert(project.DEPS, dep_name)
+        init_project_deps(project, dep_name)
+    end
+end
+
 --初始化solution环境变量
 local function init_solution_env(env)
     local groups = {}
+    local sprojects = {}
     local fmt_groups = ""
-    tsort(projects, project_sort)
+    for name, project in pairs(projects) do
+        for _, dep_name in ipairs(project.DEPS) do
+            init_project_deps(project, dep_name)
+        end
+        tinsert(sprojects, project)
+    end
+    tsort(sprojects, project_sort)
     local lguid = require("lguid")
-    for i = #projects, 1, -1 do
-        local proj = projects[i]
+    for i = #sprojects, 1, -1 do
+        local proj = sprojects[i]
         local gname = proj.GROUP
         if not groups[gname] then
             fmt_groups = gname .. " " .. fmt_groups
@@ -168,14 +184,14 @@ local function build_projfile(solution_dir, project_dir, lmake_dir, bmimalloc)
             ltmpl.render_file(lappend(lmake_dir, "tmpl/make.tpl"),  lrepextension(fullname, ".mak"), env, fullname)
             ltmpl.render_file(lappend(lmake_dir, "tmpl/vcxproj.tpl"),  lrepextension(fullname, ".vcxproj"), env, fullname)
             ltmpl.render_file(lappend(lmake_dir, "tmpl/filters.tpl"),  lrepextension(fullname, ".vcxproj.filters"), env, fullname)
-            tinsert(projects, {
+            projects[env.PROJECT_NAME] = {
                 DIR = mak_dir,
                 DEPS = env.DEPS,
                 GROUP = env.GROUP,
                 NAME = env.PROJECT_NAME,
                 FILE = lstem(fullname),
                 GUID = lguid.guid(env.PROJECT_NAME)
-            })
+            }
         end
         :: continue ::
     end
