@@ -5,7 +5,7 @@
 STDC = "gnu99"
 
 --c++11/c++14/c++17/c++20
-STDCPP = "c++14"
+STDCPP = "c++17"
 
 --需要的FLAGS
 FLAGS = {
