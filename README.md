@@ -175,7 +175,7 @@ DEPS = {
 - MIMALLOC库目录
 ```lua
 --是否启用mimalloc库
-MIMALLOC_DIR = "../../mimalloc/mimalloc/include"
+MIMALLOC_DIR = "extend/mimalloc/mimalloc/include"
 ```
 - 分组定义
 ```lua

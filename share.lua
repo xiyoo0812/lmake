@@ -74,7 +74,7 @@ EXCLUDE_FILE = {
 }
 
 --是否启用mimalloc库
-MIMALLOC_DIR = "../../mimalloc/mimalloc/include"
+MIMALLOC_DIR = "extend/mimalloc/mimalloc/include"
 
 --需要连接的库文件
 LIBS = {

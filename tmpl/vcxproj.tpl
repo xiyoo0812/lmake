@@ -18,7 +18,7 @@
 {{% end %}}
 {{% if MIMALLOC and MIMALLOC_DIR then %}}
 {{% table.insert(ALIBS, "mimalloc.lib") %}}
-{{% table.insert(INCLUDES, MIMALLOC_DIR) %}}
+{{% table.insert(INCLUDES, "$(SolutionDir)" .. MIMALLOC_DIR) %}}
 {{% end %}}
 {{% local FMT_LIBS = table.concat(ALIBS, ";") %}}
 {{% local FMT_DEFINES = table.concat(DEFINES or {}, ";") %}}
