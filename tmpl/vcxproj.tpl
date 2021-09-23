@@ -134,10 +134,10 @@
     {{% else %}}
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)library/$(Platform);{{%= FMT_LIBRARY_DIR %}};%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir){{%= DST_LIB_DIR %}}/$(Platform);{{%= FMT_LIBRARY_DIR %}};%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <ImportLibrary>$(SolutionDir)library/$(Platform)/$(TargetName).lib</ImportLibrary>
+      <ImportLibrary>$(SolutionDir){{%= DST_LIB_DIR %}}/$(Platform)/$(TargetName).lib</ImportLibrary>
       <ProgramDatabaseFile>$(SolutionDir)temp\$(ProjectName)\$(Platform)\$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>{{%= FMT_LIBS %}};%(AdditionalDependencies)</AdditionalDependencies>
       <ForceFileOutput>
@@ -146,14 +146,14 @@
     {{% end %}}
     <PreBuildEvent>
       {{% for _, re_build_lib in pairs(WINDOWS_PREBUILDS or {}) do %}}
-      <Command>copy /y {{%= re_build_lib %}} $(SolutionDir)bin</Command>
+      <Command>copy /y {{%= re_build_lib %}} $(SolutionDir){{%= DST_DIR %}}</Command>
       {{% end %}}
     </PreBuildEvent>
     <PostBuildEvent>
       {{% if PROJECT_TYPE == "static" then %}}
-      <Command>copy /y $(TargetPath) $(SolutionDir)library\$(Platform)</Command>
+      <Command>copy /y $(TargetPath) $(SolutionDir){{%= DST_LIB_DIR %}}\$(Platform)</Command>
       {{% else %}}
-      <Command>copy /y $(TargetPath) $(SolutionDir)bin</Command>
+      <Command>copy /y $(TargetPath) $(SolutionDir){{%= DST_DIR %}}</Command>
       {{% end %}}
     </PostBuildEvent>
   </ItemDefinitionGroup>

@@ -65,6 +65,14 @@ DARWIN_LIBRARY_DIR = {
 --源文件路径
 SRC_DIR = "src"
 
+--目标文件生成路径
+--.so/.exe/.dll
+DST_DIR = "bin"
+
+--LIB文件生成路径
+--.a/.lib
+DST_LIB_DIR = "library"
+
 --子目录路径
 SUB_DIR = {
 }

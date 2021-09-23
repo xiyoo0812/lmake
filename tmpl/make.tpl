@@ -163,25 +163,25 @@ PROJECT_PREFIX =
 
 #目标定义
 {{% if PROJECT_TYPE == "static" then %}}
-TARGET_DIR = $(SOLUTION_DIR)library
+TARGET_DIR = $(SOLUTION_DIR){{%= DST_LIB_DIR %}}
 TARGET_STATIC =  $(TARGET_DIR)/$(PROJECT_PREFIX)$(TARGET_NAME).a
 MYCFLAGS += -fPIC
 {{% elseif PROJECT_TYPE == "dynamic" then %}}
 MYCFLAGS += -fPIC
-TARGET_DIR = $(SOLUTION_DIR)bin
+TARGET_DIR = $(SOLUTION_DIR){{%= DST_DIR %}}
 TARGET_DYNAMIC =  $(TARGET_DIR)/$(PROJECT_PREFIX)$(TARGET_NAME).so
 #macos系统so链接问题
 ifeq ($(UNAME_S), Darwin)
 LDFLAGS += -install_name $(PROJECT_PREFIX)$(TARGET_NAME).so
 endif
 {{% else %}}
-TARGET_DIR = $(SOLUTION_DIR)bin
+TARGET_DIR = $(SOLUTION_DIR){{%= DST_DIR %}}
 TARGET_EXECUTE =  $(TARGET_DIR)/$(TARGET_NAME)
 {{% end %}}
 
 #link添加.so目录
-LDFLAGS += -L$(SOLUTION_DIR)bin
-LDFLAGS += -L$(SOLUTION_DIR)library
+LDFLAGS += -L$(SOLUTION_DIR){{%= DST_DIR %}}
+LDFLAGS += -L$(SOLUTION_DIR){{%= DST_LIB_DIR %}}
 
 #自动生成目标
 OBJS =
