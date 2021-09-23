@@ -128,6 +128,7 @@ SRC_DIR = "lua"
 ```
 - 目标文件目录
 ```lua
+--目标文件生成路径
 --.so/.exe/.dll
 DST_DIR = "bin"
 
