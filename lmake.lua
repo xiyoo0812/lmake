@@ -131,7 +131,8 @@ local function collect_files(collect_dir, project_dir, source_dir, args, group, 
         if ext_name == ".c" or ext_name == ".cc" or ext_name == ".cpp" then
             local cmp_name = path_cut(fullname, source_dir)
             local is_obj = tcontain(args.OBJS, cmp_name)
-            local is_exclude = tcontain(path_fmt(args.EXCLUDE_FILE), cmp_name)
+            local cmp_name_c = string.gsub(cmp_name, '/', '\\')
+            local is_exclude = tcontain(path_fmt(args.EXCLUDE_FILE), cmp_name_c)
             tinsert(collects, {fmt_name_c, group, is_exclude, is_obj})
         end
         :: continue ::
