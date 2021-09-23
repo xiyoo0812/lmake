@@ -35,8 +35,7 @@
 {{% local FMT_INCLUDES = table.concat(AINCLUDES, ";") %}}
 {{% local FMT_LIBRARY_DIR = table.concat(ALIBDIRS, ";") %}}
 {{% local ARGS = {SUB_DIR = SUB_DIR, OBJS = OBJS, EXCLUDE_FILE = EXCLUDE_FILE } %}}
-{{% local C_SRC_DIR = string.gsub(SRC_DIR, '/', '\\') %}}
-{{% local CINCLUDES, CSOURCES = COLLECT(WORK_DIR, C_SRC_DIR, ARGS) %}}
+{{% local CINCLUDES, CSOURCES = COLLECT(WORK_DIR, SRC_DIR, ARGS) %}}
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Develop|x64">
@@ -46,11 +45,11 @@
   </ItemGroup>
   <ItemGroup>
   {{% for _, CINC in pairs(CINCLUDES or {}) do %}}
-    {{% if string.match(CINC[1], "stdafx.h") then %}}
-      {{% STDAFX = CINC[1] %}}
-    {{% else %}}
+  {{% if string.match(CINC[1], "stdafx.h") then %}}
+    {{% STDAFX = CINC[1] %}}
+  {{% else %}}
     <ClInclude Include="{{%= CINC[1] %}}" />
-    {{% end %}}
+  {{% end %}}
   {{% end %}}
   </ItemGroup>
   <ItemGroup>

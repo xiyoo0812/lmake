@@ -3,18 +3,17 @@
   {{% local STDAFX = nil %}}
   {{% local TEMPS, GROUPS = {}, {} %}}
   {{% local ARGS = {SUB_DIR = SUB_DIR, OBJS = OBJS, EXCLUDE_FILE = EXCLUDE_FILE } %}}
-  {{% local C_SRC_DIR = string.gsub(SRC_DIR, '/', '\\') %}}
-  {{% local CINCLUDES, CSOURCES = COLLECT(WORK_DIR, C_SRC_DIR, ARGS) %}}
+  {{% local CINCLUDES, CSOURCES = COLLECT(WORK_DIR, SRC_DIR, ARGS) %}}
   <ItemGroup>
   {{% for _, CINC in pairs(CINCLUDES or {}) do %}}
-    {{% if string.match(CINC[1], "stdafx.h") then %}}
-      {{% STDAFX = CINC[1] %}}
-    {{% else %}}
+  {{% if string.match(CINC[1], "stdafx.h") then %}}
+    {{% STDAFX = CINC[1] %}}
+  {{% else %}}
     <ClInclude Include="{{%= CINC[1] %}}">
       {{% TEMPS[CINC[2]] = true %}}
       <Filter>{{%= CINC[2] %}}</Filter>
     </ClInclude>
-    {{% end %}}
+  {{% end %}}
   {{% end %}}
   </ItemGroup>
   <ItemGroup>

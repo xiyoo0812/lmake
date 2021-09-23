@@ -46,6 +46,11 @@ local function group_sort(a, b)
     return a.INDEX > b.INDEX
 end
 
+--文件排序
+local function files_sort(a, b)
+    return a[1] < b[1]
+end
+
 --
 local function path_fmt(paths)
     for i, path in pairs(paths) do
@@ -116,9 +121,10 @@ local function collect_files(collect_dir, project_dir, source_dir, args, group, 
         end
         local ext_name = lextension(fullname)
         local fmt_name = path_cut(fullname, project_dir)
+        local fmt_name_c = string.gsub(fmt_name, '/', '\\')
         if is_hfile then
             if ext_name == ".h" or ext_name == ".hpp" then
-                tinsert(collects, {fmt_name, group, false, false})
+                tinsert(collects, {fmt_name_c, group, false, false})
             end
             goto continue
         end
@@ -126,7 +132,7 @@ local function collect_files(collect_dir, project_dir, source_dir, args, group, 
             local cmp_name = path_cut(fullname, source_dir)
             local is_obj = tcontain(args.OBJS, cmp_name)
             local is_exclude = tcontain(path_fmt(args.EXCLUDE_FILE), cmp_name)
-            tinsert(collects, {fmt_name, group, is_exclude, is_obj})
+            tinsert(collects, {fmt_name_c, group, is_exclude, is_obj})
         end
         :: continue ::
     end
@@ -142,6 +148,8 @@ local function collect_sources(project_dir, src_dir, args)
         collect_files(lappend(source_dir, sub_dir), project_dir, source_dir, args, sub_dir, includes, true)
         collect_files(lappend(source_dir, sub_dir), project_dir, source_dir, args, sub_dir, sources, false)
     end
+    tsort(includes, files_sort)
+    tsort(sources, files_sort)
     return includes, sources
 end
 
