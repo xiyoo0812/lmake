@@ -172,7 +172,7 @@ LIB_PREFIX = nil
 - WINDOWS预编译的库文件，需要copy到bin目录
 ```lua
 WINDOWS_PREBUILDS = {
-	[[bin\libcurl-x64.dll]]
+	"[bin/libcurl-x64.dll"
 }
 ```
 - 依赖项目

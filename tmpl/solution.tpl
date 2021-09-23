@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "{{%= GROUP.NAME %}}", "{{%=
 EndProject
 {{% for _, PROJECT in ipairs(GROUP.PROJECTS or {}) do %}}
 {{% table.insert(ALL_PROJS, PROJECT) %}}
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "{{%= PROJECT.NAME %}}", "{{%= PROJECT.DIR %}}/{{%= PROJECT.FILE %}}.vcxproj", "{{{%= PROJECT.GUID %}}}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "{{%= PROJECT.NAME %}}", "{{%= PROJECT.DIR %}}\{{%= PROJECT.FILE %}}.vcxproj", "{{{%= PROJECT.GUID %}}}"
 	{{% if #PROJECT.DEPS > 0 then %}}
 	ProjectSection(ProjectDependencies) = postProject
 	{{% for _, DEP in ipairs(PROJECT.DEPS or {}) do %}}

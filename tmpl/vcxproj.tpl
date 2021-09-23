@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 {{% local ALIBS = {} %}}
 {{% local STDAFX = nil %}}
+{{% local AINCLUDES = {} %}}
+{{% local ALIBDIRS = {} %}}
 {{% for _, CLIB in pairs(LIBS or {}) do %}}
 {{% table.insert(ALIBS, CLIB .. ".lib") %}}
 {{% end %}}
@@ -22,10 +24,19 @@
 {{% end %}}
 {{% local FMT_LIBS = table.concat(ALIBS, ";") %}}
 {{% local FMT_DEFINES = table.concat(DEFINES or {}, ";") %}}
-{{% local FMT_INCLUDES = table.concat(INCLUDES or {}, ";") %}}
-{{% local FMT_LIBRARY_DIR = table.concat(LIBRARY_DIR or {}, ";") %}}
+{{% for _, INC in pairs(INCLUDES or {}) do %}}
+{{% local C_INC = string.gsub(INC, '/', '\\') %}}
+{{% table.insert(AINCLUDES, C_INC) %}}
+{{% end %}}
+{{% for _, LIB_DIR in pairs(LIBRARY_DIR or {}) do %}}
+{{% local C_LIB_DIR = string.gsub(LIB_DIR, '/', '\\') %}}
+{{% table.insert(ALIBDIRS, C_LIB_DIR) %}}
+{{% end %}}
+{{% local FMT_INCLUDES = table.concat(AINCLUDES, ";") %}}
+{{% local FMT_LIBRARY_DIR = table.concat(ALIBDIRS, ";") %}}
 {{% local ARGS = {SUB_DIR = SUB_DIR, OBJS = OBJS, EXCLUDE_FILE = EXCLUDE_FILE } %}}
-{{% local CINCLUDES, CSOURCES = COLLECT(WORK_DIR, SRC_DIR, ARGS) %}}
+{{% local C_SRC_DIR = string.gsub(SRC_DIR, '/', '\\') %}}
+{{% local CINCLUDES, CSOURCES = COLLECT(WORK_DIR, C_SRC_DIR, ARGS) %}}
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Develop|x64">
@@ -115,7 +126,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
       {{% if MIMALLOC and MIMALLOC_DIR then %}}
-      <ForcedIncludeFiles>../../mimalloc-ex.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>..\..\mimalloc-ex.h</ForcedIncludeFiles>
       {{% end %}}
       {{% if STDCPP == "c++17" then %}}
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -134,10 +145,10 @@
     {{% else %}}
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir){{%= DST_LIB_DIR %}}/$(Platform);{{%= FMT_LIBRARY_DIR %}};%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir){{%= DST_LIB_DIR %}}\$(Platform);{{%= FMT_LIBRARY_DIR %}};%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <ImportLibrary>$(SolutionDir){{%= DST_LIB_DIR %}}/$(Platform)/$(TargetName).lib</ImportLibrary>
+      <ImportLibrary>$(SolutionDir){{%= DST_LIB_DIR %}}\$(Platform)\$(TargetName).lib</ImportLibrary>
       <ProgramDatabaseFile>$(SolutionDir)temp\$(ProjectName)\$(Platform)\$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>{{%= FMT_LIBS %}};%(AdditionalDependencies)</AdditionalDependencies>
       <ForceFileOutput>
@@ -145,15 +156,19 @@
     </Link>
     {{% end %}}
     <PreBuildEvent>
-      {{% for _, re_build_lib in pairs(WINDOWS_PREBUILDS or {}) do %}}
-      <Command>copy /y {{%= re_build_lib %}} $(SolutionDir){{%= DST_DIR %}}</Command>
+	    {{% local dst_dir = string.gsub(DST_DIR, '/', '\\') %}}
+      {{% for _, PREBUILD_LIB in pairs(WINDOWS_PREBUILDS or {}) do %}}
+	    {{% local pre_build_lib = string.gsub(PREBUILD_LIB, '/', '\\') %}}
+      <Command>copy /y {{%= pre_build_lib %}} $(SolutionDir){{%= dst_dir %}}</Command>
       {{% end %}}
     </PreBuildEvent>
     <PostBuildEvent>
       {{% if PROJECT_TYPE == "static" then %}}
-      <Command>copy /y $(TargetPath) $(SolutionDir){{%= DST_LIB_DIR %}}\$(Platform)</Command>
+	    {{% local dst_lib_dir = string.gsub(DST_LIB_DIR, '/', '\\') %}}
+      <Command>copy /y $(TargetPath) $(SolutionDir){{%= dst_lib_dir %}}\$(Platform)</Command>
       {{% else %}}
-      <Command>copy /y $(TargetPath) $(SolutionDir){{%= DST_DIR %}}</Command>
+	    {{% local dst_dir = string.gsub(DST_DIR, '/', '\\') %}}
+      <Command>copy /y $(TargetPath) $(SolutionDir){{%= dst_dir %}}</Command>
       {{% end %}}
     </PostBuildEvent>
   </ItemDefinitionGroup>

@@ -102,7 +102,6 @@ DARWIN_LIBS = {
 }
 
 --WINDOWS预编译的库文件，需要copy到bin目录
---建议使用[[]]来包含字符串，否则有\转义问题
 WINDOWS_PREBUILDS = {
 }
 
