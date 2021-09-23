@@ -232,7 +232,7 @@ local function build_lmak(solution_dir)
     init_solution_env(env)
     local ltmpl = require("ltemplate.ltemplate")
     ltmpl.render_file(lappend(lmake_dir, "tmpl/makefile.tpl"), lappend(solution_dir, "Makefile"), env)
-    ltmpl.render_file(lappend(lmake_dir, "tmpl/Solution.tpl"), lappend(solution_dir, lconcat(solution, ".sln")), env)
+    ltmpl.render_file(lappend(lmake_dir, "tmpl/solution.tpl"), lappend(solution_dir, lconcat(solution, ".sln")), env)
     print(sformat("build solution %s success!", solution))
 end
 

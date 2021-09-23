@@ -112,11 +112,11 @@ EXCLUDE += $(SRC_DIR)/{{%= exclude %}}
 LIBS =
 {{% if MIMALLOC and MIMALLOC_DIR then %}}
 #是否启用mimalloc库
-LIBS += -lmimalloc -lpthread
+LIBS += -lmimalloc
 MYCFLAGS += -I$(SOLUTION_DIR){{%= MIMALLOC_DIR %}} -include ../../mimalloc-ex.h
 {{% end %}}
 #系统库
-LIBS += -lm -ldl -lstdc++
+LIBS += -lm -ldl -lstdc++ -lpthread
 #自定义库
 {{% if #LIBS > 0 then %}}
 {{% for _, lib in pairs(LIBS) do %}}
