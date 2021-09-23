@@ -38,7 +38,7 @@ local function project_sort(a, b)
     if #(a.ALLDEPS) == #(b.ALLDEPS) then
         return a.NAME < b.NAME
     end
-    return #(a.ALLDEPS) < #(b.ALLDEPS)    
+    return #(a.ALLDEPS) < #(b.ALLDEPS)
 end
 
 --分组排序
