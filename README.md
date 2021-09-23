@@ -126,6 +126,15 @@ DARWIN_LIBS = {
 --不会递归扫描，多目录使用SUB_DIR
 SRC_DIR = "lua"
 ```
+- 目标文件目录
+```lua
+--.so/.exe/.dll
+DST_DIR = "bin"
+
+--LIB文件生成路径
+--.a/.lib
+DST_LIB_DIR = "library"
+```
 - 子目录定义
 ```lua
 --子目录路径，目录基于SRC_DIR
