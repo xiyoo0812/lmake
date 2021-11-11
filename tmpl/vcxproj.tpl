@@ -159,10 +159,11 @@
     <PostBuildEvent>
       {{% local post_commands = {} %}}
       {{% if PROJECT_TYPE == "static" then %}}
-	    {{% local dst_lib_dir = string.gsub(DST_LIB_DIR, '/', '\\') %}}
-      {{% table.insert(post_commands, string.format("copy /y $(TargetPath) $(SolutionDir)%s$(Platform)", dst_lib_dir)) %}}
+      {{% local dst_lib_dir = string.format("$(SolutionDir)%s/$(Platform)", DST_LIB_DIR) %}}
+      {{% local dst_dir = string.gsub(dst_lib_dir, '/', '\\') %}}
+      {{% table.insert(post_commands, string.format("copy /y $(TargetPath) %s", dst_dir)) %}}
       {{% else %}}
-	    {{% local dst_dir = string.gsub(DST_DIR, '/', '\\') %}}
+      {{% local dst_dir = string.gsub(DST_DIR, '/', '\\') %}}
       {{% table.insert(post_commands, string.format("copy /y $(TargetPath) $(SolutionDir)%s", dst_dir)) %}}
       {{% end %}}
       {{% for _, POSTBUILD_CMD in pairs(WINDOWS_POSTBUILDS) do %}}
