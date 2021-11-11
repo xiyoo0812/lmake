@@ -77,6 +77,9 @@ DST_LIB_DIR = "library"
 SUB_DIR = {
 }
 
+--自动搜索子目录
+AUTO_SUB_DIR = false
+
 --需要排除的源文件,目录基于$(SRC_DIR)
 EXCLUDE_FILE = {
 }
@@ -101,8 +104,28 @@ LINUX_LIBS = {
 DARWIN_LIBS = {
 }
 
---WINDOWS预编译的库文件，需要copy到bin目录
+--WINDOWS预编译命令
+--格式: { cmd, args }
+--{ "copy /y", "bin/libcurl-x64.dll $(SolutionDir)bin" }
 WINDOWS_PREBUILDS = {
+}
+
+--非WINDOWS预编译命令
+--格式: { cmd, args }
+--{ "cp -r", "bin/libcurl-x64.dll $(SolutionDir)bin" }
+NWINDOWS_PREBUILDS = {
+}
+
+--WINDOWS编译后命令
+--格式: { cmd, args }
+--{ "copy /y", "bin/libcurl-x64.dll $(SolutionDir)bin" }
+WINDOWS_POSTBUILDS = {
+}
+
+--非WINDOWS编译后命令
+--格式: { cmd, args }
+--{ "cp -r", "bin/libcurl-x64.dll $(SolutionDir)bin" }
+NWINDOWS_POSTBUILDS = {
 }
 
 --目标文件，可以在这里定义，如果没有定义，share.mak会自动生成

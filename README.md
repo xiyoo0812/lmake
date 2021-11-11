@@ -145,6 +145,8 @@ SUB_DIR = {
 	"minizip",
 	"tinyxml2",
 }
+--自动搜索子目录
+AUTO_SUB_DIR = false
 ```
 - 目标文件定义
 ```lua
@@ -169,10 +171,32 @@ EXCLUDE_FILE = {
 LIB_PREFIX = 1
 LIB_PREFIX = nil
 ```
-- WINDOWS预编译的库文件，需要copy到bin目录
+- WINDOWS预编译命令
 ```lua
+--格式: { cmd, args }
 WINDOWS_PREBUILDS = {
-	"[bin/libcurl-x64.dll"
+	{ "copy /y", "bin/libcurl-x64.dll $(SolutionDir)bin" }
+}
+```
+- NWINDOWS预编译命令
+```lua
+--格式: { cmd, args }
+NWINDOWS_PREBUILDS = {
+	{ "copy /y", "bin/libcurl-x64.dll $(SolutionDir)bin" }
+}
+```
+- WINDOWS编译后命令
+```lua
+--格式: { cmd, args }
+WINDOWS_POSTBUILDS = {
+    { "cp -r", "bin/libcurl-x64.dll $(SolutionDir)bin" }
+}
+```
+- 非WINDOWS编译后命令
+```lua
+--格式: { cmd, args }
+NWINDOWS_POSTBUILDS = {
+    { "cp -r", "bin/libcurl-x64.dll $(SolutionDir)bin" }
 }
 ```
 - 依赖项目

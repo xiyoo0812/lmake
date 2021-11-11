@@ -34,8 +34,8 @@
 {{% end %}}
 {{% local FMT_INCLUDES = table.concat(AINCLUDES, ";") %}}
 {{% local FMT_LIBRARY_DIR = table.concat(ALIBDIRS, ";") %}}
-{{% local ARGS = {SUB_DIR = SUB_DIR, OBJS = OBJS, EXCLUDE_FILE = EXCLUDE_FILE } %}}
-{{% local CINCLUDES, CSOURCES = COLLECT(WORK_DIR, SRC_DIR, ARGS) %}}
+{{% local ARGS = {AUTO_SUB_DIR = AUTO_SUB_DIR, SUB_DIR = SUB_DIR, OBJS = OBJS, EXCLUDE_FILE = EXCLUDE_FILE } %}}
+{{% local CINCLUDES, CSOURCES = COLLECT_SOURCES(WORK_DIR, SRC_DIR, ARGS) %}}
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Develop|x64">
@@ -45,16 +45,13 @@
   </ItemGroup>
   <ItemGroup>
   {{% for _, CINC in pairs(CINCLUDES or {}) do %}}
-  {{% if string.match(CINC[1], "stdafx.h") then %}}
-    {{% STDAFX = CINC[1] %}}
-  {{% else %}}
     <ClInclude Include="{{%= CINC[1] %}}" />
-  {{% end %}}
   {{% end %}}
   </ItemGroup>
   <ItemGroup>
   {{% for _, CSRC in pairs(CSOURCES or {}) do %}}
   {{% if string.match(CSRC[1], "stdafx.cpp") then %}}
+    {{% STDAFX = true %}}
     <ClCompile Include="{{%= CSRC[1] %}}" >
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Develop|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -69,11 +66,6 @@
   {{% end %}}
   {{% end %}}
   </ItemGroup>
-  {{% if STDAFX then %}}
-  <ItemGroup>
-    <CustomBuild Include="{{%= STDAFX %}}" />
-  </ItemGroup>
-  {{% end %}}
   <PropertyGroup Label="Globals">
     <ProjectGuid>{{{%= GUID_NEW(PROJECT_NAME) %}}}</ProjectGuid>
     <RootNamespace>{{%= PROJECT_NAME %}}</RootNamespace>
@@ -155,20 +147,29 @@
     </Link>
     {{% end %}}
     <PreBuildEvent>
-	    {{% local dst_dir = string.gsub(DST_DIR, '/', '\\') %}}
-      {{% for _, PREBUILD_LIB in pairs(WINDOWS_PREBUILDS or {}) do %}}
-	    {{% local pre_build_lib = string.gsub(PREBUILD_LIB, '/', '\\') %}}
-      <Command>copy /y {{%= pre_build_lib %}} $(SolutionDir){{%= dst_dir %}}</Command>
+      {{% if next(WINDOWS_PREBUILDS) then %}}
+      {{% local pre_commands = {} %}}
+      {{% for _, PREBUILD_CMD in pairs(WINDOWS_PREBUILDS) do %}}
+      {{% local pre_build_cmd = string.gsub(PREBUILD_CMD[2], '/', '\\') %}}
+      {{% table.insert(pre_commands, string.format("%s %s", PREBUILD_CMD[1], pre_build_cmd)) %}}
+      {{% end %}}
+      {{%= string.format("<Command>%s</Command>", table.concat(pre_commands, "\n")) %}}
       {{% end %}}
     </PreBuildEvent>
     <PostBuildEvent>
+      {{% local post_commands = {} %}}
       {{% if PROJECT_TYPE == "static" then %}}
 	    {{% local dst_lib_dir = string.gsub(DST_LIB_DIR, '/', '\\') %}}
-      <Command>copy /y $(TargetPath) $(SolutionDir){{%= dst_lib_dir %}}\$(Platform)</Command>
+      {{% table.insert(post_commands, string.format("copy /y $(TargetPath) $(SolutionDir)%s$(Platform)", dst_lib_dir)) %}}
       {{% else %}}
 	    {{% local dst_dir = string.gsub(DST_DIR, '/', '\\') %}}
-      <Command>copy /y $(TargetPath) $(SolutionDir){{%= dst_dir %}}</Command>
+      {{% table.insert(post_commands, string.format("copy /y $(TargetPath) $(SolutionDir)%s", dst_dir)) %}}
       {{% end %}}
+      {{% for _, POSTBUILD_CMD in pairs(WINDOWS_POSTBUILDS) do %}}
+      {{% local post_build_cmd = string.gsub(POSTBUILD_CMD[2], '/', '\\') %}}
+      {{% table.insert(post_commands, string.format("%s %s", POSTBUILD_CMD[1], post_build_cmd)) %}}
+      {{% end %}}
+      {{%= string.format("<Command>%s</Command>", table.concat(post_commands, "\n")) %}}
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

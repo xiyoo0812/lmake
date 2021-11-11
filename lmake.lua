@@ -115,10 +115,14 @@ end
 local function collect_files(collect_dir, project_dir, source_dir, args, group, collects, is_hfile)
     local dir_files = ldir(collect_dir)
     for _, file in pairs(dir_files) do
-        local fullname = file.name
-        if file.type ~= "regular" then
+        if file.type == "directory" then
+            local sub_dir = path_cut(file.name, collect_dir)
+            if args.AUTO_SUB_DIR or tcontain(args.SUB_DIR, sub_dir) then
+                collect_files(file.name, project_dir, source_dir, args, sub_dir, collects, is_hfile)
+            end
             goto continue
         end
+        local fullname = file.name
         local ext_name = lextension(fullname)
         local fmt_name = path_cut(fullname, project_dir)
         local fmt_name_c = string.gsub(fmt_name, '/', '\\')
@@ -145,23 +149,41 @@ local function collect_sources(project_dir, src_dir, args)
     local source_dir = lappend(project_dir, src_dir)
     collect_files(source_dir, project_dir, source_dir, args, "inc", includes, true)
     collect_files(source_dir, project_dir, source_dir, args, "src", sources, false)
-    for _, sub_dir in ipairs(args.SUB_DIR) do
-        collect_files(lappend(source_dir, sub_dir), project_dir, source_dir, args, sub_dir, includes, true)
-        collect_files(lappend(source_dir, sub_dir), project_dir, source_dir, args, sub_dir, sources, false)
-    end
     tsort(includes, files_sort)
     tsort(sources, files_sort)
     return includes, sources
+end
+
+--收集目录
+local function collect_dirs(collect_dir, source_dir, sub_dirs, auto_sub_dir)
+    local dir_files = ldir(collect_dir)
+    for _, file in pairs(dir_files) do
+        if file.type == "directory" and auto_sub_dir then
+            local sub_dir = path_cut(file.name, source_dir)
+            if not tcontain(sub_dirs, sub_dir) then
+                tinsert(sub_dirs, sub_dir)
+            end
+            collect_dirs(file.name, source_dir, sub_dirs, auto_sub_dir)
+        end
+    end
+end
+
+--linux工程收集子目录
+local function collect_sub_dir(project_dir, src_dir, sub_dirs, auto_sub_dir)
+    local source_dir = lappend(project_dir, src_dir)
+    collect_dirs(source_dir, source_dir, sub_dirs, auto_sub_dir)
+   
 end
 
 --初始化项目环境变量
 local function init_project_env(project_dir, bmimalloc)
     local lguid = require("lguid")
     return {
-        WORK_DIR    = project_dir,
-        GUID_NEW    = lguid.guid,
-        MIMALLOC    = bmimalloc,
-        COLLECT     = collect_sources,
+        WORK_DIR        = project_dir,
+        GUID_NEW        = lguid.guid,
+        MIMALLOC        = bmimalloc,
+        COLLECT_SOURCES = collect_sources,
+        COLLECT_SUBDIRS = collect_sub_dir,
     }
 end
 

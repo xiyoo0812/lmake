@@ -192,12 +192,14 @@ MOBJS = $(patsubst %.m, $(INT_DIR)/%.o, $(COBJS))
 CCOBJS = $(patsubst %.cc, $(INT_DIR)/%.o, $(MOBJS))
 OBJS = $(patsubst %.cpp, $(INT_DIR)/%.o, $(CCOBJS))
 {{% else %}}
+{{% COLLECT_SUBDIRS(WORK_DIR, SRC_DIR, SUB_DIR, AUTO_SUB_DIR) %}}
 {{% for _, sub_dir in pairs(SUB_DIR) do %}}
 #子目录
-OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.c, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.c)))
-OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.m, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.m)))
-OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.cc, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.cc)))
-OBJS += $(patsubst $(SRC_DIR)/{{%= sub_dir%}}/%.cpp, $(INT_DIR)/{{%= sub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= sub_dir%}}/*.cpp)))
+{{% local fmtsub_dir = string.gsub(sub_dir, '\\', '/') %}}
+OBJS += $(patsubst $(SRC_DIR)/{{%= fmtsub_dir%}}/%.c, $(INT_DIR)/{{%= fmtsub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= fmtsub_dir%}}/*.c)))
+OBJS += $(patsubst $(SRC_DIR)/{{%= fmtsub_dir%}}/%.m, $(INT_DIR)/{{%= fmtsub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= fmtsub_dir%}}/*.m)))
+OBJS += $(patsubst $(SRC_DIR)/{{%= fmtsub_dir%}}/%.cc, $(INT_DIR)/{{%= fmtsub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= fmtsub_dir%}}/*.cc)))
+OBJS += $(patsubst $(SRC_DIR)/{{%= fmtsub_dir%}}/%.cpp, $(INT_DIR)/{{%= fmtsub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= fmtsub_dir%}}/*.cpp)))
 {{% end %}}
 #根目录
 OBJS += $(patsubst $(SRC_DIR)/%.c, $(INT_DIR)/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/*.c)))
@@ -250,6 +252,12 @@ pre_build:
 {{% for _, sub_dir in pairs(SUB_DIR) do %}}
 	mkdir -p $(INT_DIR)/{{%= sub_dir %}}
 {{% end %}}
+{{% for _, pre_cmd in pairs(NWINDOWS_PREBUILDS) do %}}
+	{{%= pre_cmd[1] %}} {{%= pre_cmd[2] %}}
+{{% end %}}
 
 #后编译
 post_build:
+{{% for _, post_cmd in pairs(NWINDOWS_POSTBUILDS) do %}}
+	{{%= post_cmd[1] %}} {{%= post_cmd[2] %}}
+{{% end %}}
