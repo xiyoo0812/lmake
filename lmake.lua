@@ -172,7 +172,6 @@ end
 local function collect_sub_dir(project_dir, src_dir, sub_dirs, auto_sub_dir)
     local source_dir = lappend(project_dir, src_dir)
     collect_dirs(source_dir, source_dir, sub_dirs, auto_sub_dir)
-   
 end
 
 --初始化项目环境变量
