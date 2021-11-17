@@ -45,21 +45,21 @@
   </ItemGroup>
   <ItemGroup>
   {{% for _, CINC in pairs(CINCLUDES or {}) do %}}
-    <ClInclude Include="{{%= CINC[1] %}}" />
+    <ClInclude Include="{{%= CINC[1] %}}"/>
   {{% end %}}
   </ItemGroup>
   <ItemGroup>
   {{% for _, CSRC in pairs(CSOURCES or {}) do %}}
   {{% if string.match(CSRC[1], "stdafx.cpp") then %}}
     {{% STDAFX = true %}}
-    <ClCompile Include="{{%= CSRC[1] %}}" >
+    <ClCompile Include="{{%= CSRC[1] %}}">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Develop|x64'">Create</PrecompiledHeader>
     </ClCompile>
   {{% else %}}
     {{% if CSRC[4] or (#OBJS == 0 and not CSRC[3]) then %}}
-    <ClCompile Include="{{%= CSRC[1] %}}" />
+    <ClCompile Include="{{%= CSRC[1] %}}"/>
     {{% else %}}
-    <ClCompile Include="{{%= CSRC[1] %}}" >
+    <ClCompile Include="{{%= CSRC[1] %}}">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Develop|x64'">true</ExcludedFromBuild>
     </ClCompile>
     {{% end %}}
