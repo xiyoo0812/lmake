@@ -15,7 +15,7 @@ all : pre_build target post_build
 MYCFLAGS =
 
 #需要定义的FLAG
-{{% for _, flag in pairs(FLAGS) do %}}
+{{% for _, flag in ipairs(FLAGS) do %}}
 MYCFLAGS += -{{%= flag %}}
 {{% end %}}
 
@@ -32,19 +32,19 @@ STDCPP = -std={{%= STDCPP %}}
 {{% end %}}
 
 #需要的include目录
-{{% for _, include in pairs(INCLUDES) do %}}
+{{% for _, include in ipairs(INCLUDES) do %}}
 MYCFLAGS += -I{{%= include %}}
 {{% end %}}
 {{% if #LINUX_INCLUDES > 0 then %}}
 ifeq ($(UNAME_S), Linux)
-{{% for _, include in pairs(LINUX_INCLUDES) do %}}
+{{% for _, include in ipairs(LINUX_INCLUDES) do %}}
 MYCFLAGS += -I{{%= include %}}
 {{% end %}}
 endif
 {{% end %}}
 {{% if #DARWIN_INCLUDES > 0 then %}}
 ifeq ($(UNAME_S), Darwin)
-{{% for _, include in pairs(DARWIN_INCLUDES) do %}}
+{{% for _, include in ipairs(DARWIN_INCLUDES) do %}}
 MYCFLAGS += -I{{%= include %}}
 {{% end %}}
 endif
@@ -52,20 +52,20 @@ endif
 
 #需要定义的选项
 {{% if #DEFINES > 0 then %}}
-{{% for _, define in pairs(DEFINES) do %}}
+{{% for _, define in ipairs(DEFINES) do %}}
 MYCFLAGS += -D{{%= define %}}
 {{% end %}}
 {{% end %}}
 {{% if #LINUX_DEFINES > 0 then %}}
 ifeq ($(UNAME_S), Linux)
-{{% for _, define in pairs(LINUX_DEFINES) do %}}
+{{% for _, define in ipairs(LINUX_DEFINES) do %}}
 MYCFLAGS += -D{{%= define %}}
 {{% end %}}
 endif
 {{% end %}}
 {{% if #DARWIN_DEFINES > 0 then %}}
 ifeq ($(UNAME_S), Darwin)
-{{% for _, define in pairs(DARWIN_DEFINES) do %}}
+{{% for _, define in ipairs(DARWIN_DEFINES) do %}}
 MYCFLAGS += -D{{%= define %}}
 {{% end %}}
 endif
@@ -76,20 +76,20 @@ LDFLAGS =
 
 {{% if #LIBRARY_DIR > 0 then %}}
 #需要附加link库目录
-{{% for _, lib_dir in pairs(LIBRARY_DIR) do %}}
+{{% for _, lib_dir in ipairs(LIBRARY_DIR) do %}}
 LDFLAGS += -L{{%= lib_dir %}}
 {{% end %}}
 {{% end %}}
 {{% if #LINUX_LIBRARY_DIR > 0 then %}}
 ifeq ($(UNAME_S), Linux)
-{{% for _, lib_dir in pairs(LINUX_LIBRARY_DIR) do %}}
+{{% for _, lib_dir in ipairs(LINUX_LIBRARY_DIR) do %}}
 LDFLAGS += -L{{%= lib_dir %}}
 {{% end %}}
 endif
 {{% end %}}
 {{% if #DARWIN_LIBRARY_DIR > 0 then %}}
 ifeq ($(UNAME_S), Darwin)
-{{% for _, lib_dir in pairs(DARWIN_LIBRARY_DIR) do %}}
+{{% for _, lib_dir in ipairs(DARWIN_LIBRARY_DIR) do %}}
 LDFLAGS += -L{{%= lib_dir %}}
 {{% end %}}
 endif
@@ -104,7 +104,7 @@ SRC_DIR = src
 
 #需要排除的源文件,目录基于$(SRC_DIR)
 EXCLUDE =
-{{% for _, exclude in pairs(EXCLUDE_FILE) do %}}
+{{% for _, exclude in ipairs(EXCLUDE_FILE) do %}}
 EXCLUDE += $(SRC_DIR)/{{%= exclude %}}
 {{% end %}}
 
@@ -119,20 +119,20 @@ MYCFLAGS += -I$(SOLUTION_DIR){{%= MIMALLOC_DIR %}} -include ../../mimalloc-ex.h
 LIBS += -lm -ldl -lstdc++ -lpthread
 #自定义库
 {{% if #LIBS > 0 then %}}
-{{% for _, lib in pairs(LIBS) do %}}
+{{% for _, lib in ipairs(LIBS) do %}}
 LIBS += -l{{%= lib %}}
 {{% end %}}
 {{% end %}}
 {{% if #LINUX_LIBS > 0 then %}}
 ifeq ($(UNAME_S), Linux)
-{{% for _, lib in pairs(LINUX_LIBS) do %}}
+{{% for _, lib in ipairs(LINUX_LIBS) do %}}
 LIBS += -l{{%= lib %}}
 {{% end %}}
 endif
 {{% end %}}
 {{% if #DARWIN_LIBS > 0 then %}}
 ifeq ($(UNAME_S), Darwin)
-{{% for _, lib in pairs(DARWIN_LIBS) do %}}
+{{% for _, lib in ipairs(DARWIN_LIBS) do %}}
 LIBS += -l{{%= lib %}}
 {{% end %}}
 endif
@@ -193,7 +193,7 @@ CCOBJS = $(patsubst %.cc, $(INT_DIR)/%.o, $(MOBJS))
 OBJS = $(patsubst %.cpp, $(INT_DIR)/%.o, $(CCOBJS))
 {{% else %}}
 {{% COLLECT_SUBDIRS(WORK_DIR, SRC_DIR, SUB_DIR, AUTO_SUB_DIR) %}}
-{{% for _, sub_dir in pairs(SUB_DIR) do %}}
+{{% for _, sub_dir in ipairs(SUB_DIR) do %}}
 #子目录
 {{% local fmtsub_dir = string.gsub(sub_dir, '\\', '/') %}}
 OBJS += $(patsubst $(SRC_DIR)/{{%= fmtsub_dir%}}/%.c, $(INT_DIR)/{{%= fmtsub_dir%}}/%.o, $(filter-out $(EXCLUDE), $(wildcard $(SRC_DIR)/{{%= fmtsub_dir%}}/*.c)))
@@ -249,15 +249,15 @@ clean :
 pre_build:
 	mkdir -p $(INT_DIR)
 	mkdir -p $(TARGET_DIR)
-{{% for _, sub_dir in pairs(SUB_DIR) do %}}
+{{% for _, sub_dir in ipairs(SUB_DIR) do %}}
 	mkdir -p $(INT_DIR)/{{%= sub_dir %}}
 {{% end %}}
-{{% for _, pre_cmd in pairs(NWINDOWS_PREBUILDS) do %}}
+{{% for _, pre_cmd in ipairs(NWINDOWS_PREBUILDS) do %}}
 	{{%= pre_cmd[1] %}} {{%= pre_cmd[2] %}}
 {{% end %}}
 
 #后编译
 post_build:
-{{% for _, post_cmd in pairs(NWINDOWS_POSTBUILDS) do %}}
+{{% for _, post_cmd in ipairs(NWINDOWS_POSTBUILDS) do %}}
 	{{%= post_cmd[1] %}} {{%= post_cmd[2] %}}
 {{% end %}}
