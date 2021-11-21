@@ -26,7 +26,7 @@
   {{% table.sort(GROUPS, function(a, b) return a < b end) %}}
   {{% for _, GROUP in pairs(GROUPS or {}) do %}}
     <Filter Include="{{%= GROUP %}}">
-      <UniqueIdentifier >{{{%= GUID_NEW(GROUP) %}}}</UniqueIdentifier>
+      <UniqueIdentifier>{{{%= GUID_NEW(GROUP) %}}}</UniqueIdentifier>
     </Filter>
   {{% end %}}
   </ItemGroup>
