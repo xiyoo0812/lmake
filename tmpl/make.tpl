@@ -115,8 +115,6 @@ LIBS =
 LIBS += -lmimalloc
 MYCFLAGS += -I$(SOLUTION_DIR){{%= MIMALLOC_DIR %}} -include ../../mimalloc-ex.h
 {{% end %}}
-#系统库
-LIBS += -lm -ldl -lstdc++ -lpthread
 #自定义库
 {{% if #LIBS > 0 then %}}
 {{% for _, lib in pairs(LIBS) do %}}
@@ -137,6 +135,8 @@ LIBS += -l{{%= lib %}}
 {{% end %}}
 endif
 {{% end %}}
+#系统库
+LIBS += -lm -ldl -lstdc++ -lpthread
 
 #定义基础的编译选项
 CC = gcc
