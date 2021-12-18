@@ -125,7 +125,7 @@ local function collect_files(collect_dir, project_dir, source_dir, args, group, 
         local fullname = file.name
         local ext_name = lextension(fullname)
         local fmt_name = path_cut(fullname, project_dir)
-        local fmt_name_c = string.gsub(fmt_name, '/', '\\')
+        local fmt_name_c = sgsub(fmt_name, '/', '\\')
         if is_hfile then
             if ext_name == ".h" or ext_name == ".hpp" then
                 tinsert(collects, {fmt_name_c, group, false, false})
@@ -135,7 +135,7 @@ local function collect_files(collect_dir, project_dir, source_dir, args, group, 
         if ext_name == ".c" or ext_name == ".cc" or ext_name == ".cpp" then
             local cmp_name = path_cut(fullname, source_dir)
             local is_obj = tcontain(args.OBJS, cmp_name)
-            local cmp_name_c = string.gsub(cmp_name, '/', '\\')
+            local cmp_name_c = sgsub(cmp_name, '/', '\\')
             local is_exclude = tcontain(path_fmt(args.EXCLUDE_FILE), cmp_name_c)
             tinsert(collects, {fmt_name_c, group, is_exclude, is_obj})
         end
