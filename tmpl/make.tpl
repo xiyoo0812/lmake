@@ -250,7 +250,7 @@ pre_build:
 	mkdir -p $(INT_DIR)
 	mkdir -p $(TARGET_DIR)
 {{% for _, sub_dir in ipairs(SUB_DIR) do %}}
-	{{% local fmtsub_dir = string.gsub(sub_dir, '\\', '/') %}}	
+	{{% local fmtsub_dir = string.gsub(sub_dir, '\\', '/') %}}
 	mkdir -p $(INT_DIR)/{{%= fmtsub_dir %}}
 {{% end %}}
 {{% for _, pre_cmd in ipairs(NWINDOWS_PREBUILDS) do %}}
