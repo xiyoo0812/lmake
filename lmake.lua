@@ -12,7 +12,6 @@ local lrelativedir  = lstdfs.relative_path
 local lrepextension = lstdfs.replace_extension
 local sgsub         = string.gsub
 local sformat       = string.format
-local tinsert       = table.insert
 local tsort         = table.sort
 
 local projects      = {}
@@ -71,7 +70,8 @@ local function init_project_deps(project, find_name)
     local find_project = projects[find_name]
     if find_project then
         for _, dep_name in ipairs(find_project.DEPS) do
-            tinsert(project.ALLDEPS, dep_name)
+            local all_deps = project.ALLDEPS
+            all_deps[#all_deps + 1] = dep_name
             init_project_deps(project, dep_name)
         end
     end
@@ -86,10 +86,11 @@ local function init_solution_env(env)
     for name, project in pairs(projects) do
         project.ALLDEPS = {}
         for _, dep_name in ipairs(project.DEPS) do
-            tinsert(project.ALLDEPS, dep_name)
+            local all_deps = project.ALLDEPS
+            all_deps[#all_deps + 1] = dep_name
             init_project_deps(project, dep_name)
         end
-        tinsert(sprojects, project)
+        sprojects[#sprojects + 1] = project
     end
     tsort(sprojects, project_sort)
     local lguid = require("lguid")
@@ -100,10 +101,11 @@ local function init_solution_env(env)
             groups[gname] = { NAME = gname, PROJECTS = {} }
         end
         groups[gname].INDEX = i
-        tinsert(groups[gname].PROJECTS, proj)
+        local gprojects = groups[gname].PROJECTS
+        gprojects[#gprojects + 1] = proj
     end
     for _, group in pairs(groups) do
-        tinsert(sgroup, group)
+        sgroup[#sgroup + 1] = group
     end
     tsort(sgroup, group_sort)
     env.GUID_NEW = lguid.guid
@@ -128,7 +130,7 @@ local function collect_files(collect_dir, project_dir, source_dir, args, group, 
         local fmt_name_c = sgsub(fmt_name, '/', '\\')
         if is_hfile then
             if ext_name == ".h" or ext_name == ".hpp" then
-                tinsert(collects, {fmt_name_c, group, false, false})
+                collects[#collects + 1] = {fmt_name_c, group, false, false}
             end
             goto continue
         end
@@ -137,7 +139,7 @@ local function collect_files(collect_dir, project_dir, source_dir, args, group, 
             local is_obj = tcontain(args.OBJS, cmp_name)
             local cmp_name_c = sgsub(cmp_name, '/', '\\')
             local is_exclude = tcontain(path_fmt(args.EXCLUDE_FILE), cmp_name_c)
-            tinsert(collects, {fmt_name_c, group, is_exclude, is_obj})
+            collects[#collects + 1] = {fmt_name_c, group, is_exclude, is_obj}
         end
         :: continue ::
     end
@@ -161,7 +163,7 @@ local function collect_dirs(collect_dir, source_dir, sub_dirs, auto_sub_dir)
         if file.type == "directory" and auto_sub_dir then
             local sub_dir = path_cut(file.name, source_dir)
             if not tcontain(sub_dirs, sub_dir) then
-                tinsert(sub_dirs, sub_dir)
+                sub_dirs[#sub_dirs + 1] = sub_dir
             end
             collect_dirs(file.name, source_dir, sub_dirs, auto_sub_dir)
         end
