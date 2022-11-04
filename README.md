@@ -52,6 +52,10 @@ FLAGS = {
 	"Wno-sign-compare"
 }
 ```
+- 是否生成
+```lua
+ENABLE = true
+```
 - include目录(-I)
 ```lua
 --各个平台都需要的include目录定义
