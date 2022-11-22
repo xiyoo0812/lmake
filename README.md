@@ -21,8 +21,6 @@
 SOLUTION = "xxxx"
 --lmake目录
 LMAKE_DIR = "../lmake"
---mimalloc
-USE_MIMALLOC = false
 ```
 - *.lmak：子项目配置文件, 此文件需要配置项目细节
 - share.lua: lmake公共配置文件, 以及参考说明, 此文件内包含lmake所有的默认选项
@@ -51,10 +49,6 @@ STDCPP = "c++14"
 FLAGS = {
 	"Wno-sign-compare"
 }
-```
-- 是否生成
-```lua
-ENABLE = true
 ```
 - include目录(-I)
 ```lua
@@ -184,9 +178,9 @@ WINDOWS_PREBUILDS = {
 ```
 - NWINDOWS预编译命令
 ```lua
---格式: { cmd, args }
+--格式: cmd
 NWINDOWS_PREBUILDS = {
-	{ "copy /y", "bin/libcurl-x64.dll $(SolutionDir)bin" }
+	"cp bin/libcurl-x64.dll $(SolutionDir)bin"
 }
 ```
 - WINDOWS编译后命令
@@ -198,9 +192,9 @@ WINDOWS_POSTBUILDS = {
 ```
 - 非WINDOWS编译后命令
 ```lua
---格式: { cmd, args }
+--格式: cmd
 NWINDOWS_POSTBUILDS = {
-    { "cp -r", "bin/libcurl-x64.dll $(SolutionDir)bin" }
+	"cp bin/libcurl-x64.dll $(SolutionDir)bin"
 }
 ```
 - 依赖项目
