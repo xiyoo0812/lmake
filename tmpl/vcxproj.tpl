@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 {{% local ALIBS = {} %}}
 {{% local STDAFX = nil %}}
 {{% local AINCLUDES = {} %}}
@@ -89,7 +89,7 @@
     <ConfigurationType>Application</ConfigurationType>
     {{% end %}}
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v{{%= MS_VERSION %}}</PlatformToolset>
+    <PlatformToolset>v{{%= MSVC_TOOLSET %}}</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|{{%= PLATFORM %}}'" Label="Configuration">
@@ -101,7 +101,7 @@
     <ConfigurationType>Application</ConfigurationType>
     {{% end %}}
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v{{%= MS_VERSION %}}</PlatformToolset>
+    <PlatformToolset>v{{%= MSVC_TOOLSET %}}</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -151,7 +151,11 @@
       {{% if STDCPP == "c++20" then %}}
       <LanguageStandard>stdcpp20</LanguageStandard>
       {{% end %}}
+      {{% if STDCPP == "c++23" then %}}
+      <LanguageStandard>stdcpp23</LanguageStandard>
+      {{% end %}}
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     {{% if PROJECT_TYPE ~= "static" then %}}
     <Link>
@@ -217,7 +221,11 @@
       {{% if STDCPP == "c++20" then %}}
       <LanguageStandard>stdcpp20</LanguageStandard>
       {{% end %}}
+      {{% if STDCPP == "c++23" then %}}
+      <LanguageStandard>stdcpp23</LanguageStandard>
+      {{% end %}}
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     {{% if PROJECT_TYPE ~= "static" then %}}
     <Link>

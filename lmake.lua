@@ -82,8 +82,7 @@ local function init_solution_env(env)
     local groups = {}
     local sgroup = {}
     local sprojects = {}
-    local fmt_groups = ""
-    for name, project in pairs(projects) do
+    for _, project in pairs(projects) do
         project.ALLDEPS = {}
         for _, dep_name in ipairs(project.DEPS) do
             local all_deps = project.ALLDEPS
@@ -97,7 +96,6 @@ local function init_solution_env(env)
     for i, proj in ipairs(sprojects) do
         local gname = proj.GROUP
         if not groups[gname] then
-            fmt_groups = fmt_groups .. " " .. gname
             groups[gname] = { NAME = gname, PROJECTS = {} }
         end
         groups[gname].INDEX = i
@@ -109,7 +107,6 @@ local function init_solution_env(env)
     end
     tsort(sgroup, group_sort)
     env.GUID_NEW = lguid.guid
-    env.FMT_GROUPS = fmt_groups
     env.GROUPS = sgroup
 end
 
@@ -280,7 +277,15 @@ local function build_lmak(solution_dir)
         env.PLATFORM = "x64"
         ltmpl.render_file(lappend(lmake_dir, "tmpl/makefile.tpl"), lappend(solution_dir, "Makefile"), env)
     end
-    ltmpl.render_file(lappend(lmake_dir, "tmpl/solution.tpl"), lappend(solution_dir, lconcat(solution, ".sln")), env)
+    if env.MSVC_FMT_SLNX then
+        ltmpl.render_file(lappend(lmake_dir, "tmpl/slnx.tpl"), lappend(solution_dir, lconcat(solution, ".slnx")), env)
+        env.IGNORE_GROUP = nil
+        ltmpl.render_file(lappend(lmake_dir, "tmpl/slnx.tpl"), lappend(solution_dir, "all.slnx"), env)
+    else
+        ltmpl.render_file(lappend(lmake_dir, "tmpl/sln.tpl"), lappend(solution_dir, lconcat(solution, ".sln")), env)
+        env.IGNORE_GROUP = nil
+        ltmpl.render_file(lappend(lmake_dir, "tmpl/sln.tpl"), lappend(solution_dir, "all.sln"), env)
+    end
     print(sformat("build solution %s success!", solution))
 end
 

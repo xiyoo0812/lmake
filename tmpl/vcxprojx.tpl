@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 {{% local ALIBS = {} %}}
 {{% local STDAFX = nil %}}
 {{% local AINCLUDES = {} %}}
@@ -91,7 +91,7 @@
     <ConfigurationType>Application</ConfigurationType>
     {{% end %}}
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v{{%= MS_VERSION %}}</PlatformToolset>
+    <PlatformToolset>v{{%= MSVC_TOOLSET %}}</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|{{%= PLATFORM %}}'" Label="Configuration">
@@ -103,7 +103,7 @@
     <ConfigurationType>Application</ConfigurationType>
     {{% end %}}
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v{{%= MS_VERSION %}}</PlatformToolset>
+    <PlatformToolset>v{{%= MSVC_TOOLSET %}}</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
